@@ -81,13 +81,15 @@ namespace Nanon.Math.Linear
 			Transform(x => 0);
 		}
 		
-		public static Vector FromIndex(int index, int size)
+		public static Vector FromIndex(int index, int size, double zval = 0.0d, double ival = 1.0d)
 		{
 			if (size <= index)
 				throw new ArgumentException("size less than index");
 			
 			var v = new Vector(size);
-			v.cells[index] = 1.0;
+			v.Transform(zval);
+			
+			v.cells[index] = ival;
 			return v;
 		}
 		
