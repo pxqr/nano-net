@@ -1,5 +1,0 @@
-Usage: converter input output type
-
-  input  - a full path to raw source file
-  output - a full path to destination folder
-  format - input format
