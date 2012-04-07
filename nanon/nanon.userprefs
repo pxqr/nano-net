@@ -1,0 +1,92 @@
+﻿<Properties>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="../math/src/Linear/Matrix.cs">
+    <Files>
+      <File FileName="Main.cs" Line="39" Column="18" />
+      <File FileName="../neural-networks/src/Layer/Composition/LayerCompositor.cs" Line="33" Column="24" />
+      <File FileName="../neural-networks/src/Layer/LayerBuilder.cs" Line="7" Column="3" />
+      <File FileName="../neural-networks/src/NetworkBuilder.cs" Line="42" Column="1" />
+      <File FileName="../neural-networks/src/Layer/ConvolutionalLayer.cs" Line="3" Column="21" />
+      <File FileName="../math/src/Linear/Matrix.cs" Line="487" Column="24" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State expanded="True">
+          <Node name="Base" expanded="True">
+            <Node name="Data" expanded="True" />
+            <Node name="Model" expanded="True" />
+          </Node>
+          <Node name="Learning" expanded="True">
+            <Node name="Optimization" expanded="True" />
+            <Node name="Tools" expanded="True" />
+          </Node>
+          <Node name="Math" expanded="True">
+            <Node name="Activator" expanded="True" />
+            <Node name="Linear" expanded="True">
+              <Node name="Matrix.cs" selected="True" />
+            </Node>
+            <Node name="Series" expanded="True" />
+            <Node name="Sigmoid" expanded="True" />
+          </Node>
+          <Node name="nanon" expanded="True" />
+          <Node name="NeuralNetworks" expanded="True">
+            <Node name="Convolutional" expanded="True" />
+            <Node name="Layer" expanded="True">
+              <Node name="Composition" expanded="True" />
+            </Node>
+          </Node>
+          <Node name="Statistics" expanded="True">
+            <Node name="Linear" expanded="True" />
+            <Node name="Logistic" expanded="True" />
+          </Node>
+        </State>
+      </Pad>
+      <Pad Id="ClassPad">
+        <State expanded="True" selected="True" />
+      </Pad>
+      <Pad Id="MonoDevelop.Debugger.WatchPad">
+        <State>
+          <Value>numgrad</Value>
+          <Value>modelgrad</Value>
+          <Value>diff</Value>
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.ItemProperties.nanon>
+    <MonoDevelop.Ide.CustomExecutionModes>
+      <Data Name="Default (Custom)" Id="9ddb8817-9742-471d-9d04-d39f5b12f068" ModeId="Default" PromptForParameters="True">
+        <CommandData>
+          <Item Key="MonoDevelop.Ide.Execution.CustomArgsCustomizer">
+            <Value Arguments="/home/redner/projects/nanon/data/test-images.data /home/redner/projects/nanon/data/test-labels.data" ctype="CustomArgsExecutionModeData">
+              <EnvironmentVariables />
+            </Value>
+          </Item>
+          <Item Key="MonoDevelop.Ide.Execution.MonoExecutionCustomizer">
+            <Value ctype="MonoExecutionParameters" />
+          </Item>
+        </CommandData>
+      </Data>
+    </MonoDevelop.Ide.CustomExecutionModes>
+  </MonoDevelop.Ide.ItemProperties.nanon>
+  <MonoDevelop.Ide.ItemProperties.Converter>
+    <MonoDevelop.Ide.CustomExecutionModes>
+      <Data Name="Default (Custom)" Id="92820823-239e-429c-b43c-2ced3ed8ea85" ModeId="Default">
+        <CommandData>
+          <Item Key="MonoDevelop.Ide.Execution.CustomArgsCustomizer">
+            <Value Arguments="data/t10k-images-idx3-ubyte data/test-images.data" WorkingDirectory="~/projects/nanon" ctype="CustomArgsExecutionModeData">
+              <EnvironmentVariables />
+            </Value>
+          </Item>
+          <Item Key="MonoDevelop.Ide.Execution.MonoExecutionCustomizer">
+            <Value ctype="MonoExecutionParameters" />
+          </Item>
+        </CommandData>
+      </Data>
+    </MonoDevelop.Ide.CustomExecutionModes>
+  </MonoDevelop.Ide.ItemProperties.Converter>
+</Properties>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>10.0.0</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{E6361C07-480A-4F85-87CE-89F2ED3B8277}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>math</RootNamespace>
+    <AssemblyName>math</AssemblyName>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\bin</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>none</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\bin</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="Mono.Data.Tds" />
+    <Reference Include="Mono.Data.Sqlite" />
+    <Reference Include="Mono.CSharp" />
+    <Reference Include="Mono.C5" />
+    <Reference Include="Mono.Cairo" />
+    <Reference Include="Mono.Cecil, Version=0.9.4.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756">
+      <Private>False</Private>
+      <Package>monodevelop</Package>
+    </Reference>
+    <Reference Include="Mono.CompilerServices.SymbolWriter" />
+    <Reference Include="System.Data.Linq" />
+    <Reference Include="System.Core" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="Linear\Matrix.cs" />
+    <Compile Include="Linear\Vector.cs" />
+    <Compile Include="Sigmoid\Sigmoids.cs" />
+    <Compile Include="Activator\IActivator.cs" />
+    <Compile Include="Activator\Tanh.cs" />
+    <Compile Include="Activator\Logistic.cs" />
+    <Compile Include="Series\Series.cs" />
+    <Compile Include="Linear\Normalization.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <ProjectReference Include="..\..\fileformat\src\FileFormat.csproj">
+      <Project>{A9369E7A-5A2A-4DD5-8403-06D3CF54A4A5}</Project>
+      <Name>FileFormat</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Linear\" />
+    <Folder Include="Sigmoid\" />
+    <Folder Include="Series\" />
+  </ItemGroup>
+</Project>

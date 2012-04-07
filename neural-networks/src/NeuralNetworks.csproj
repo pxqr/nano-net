@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>10.0.0</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{3E62FA99-FA0D-47FB-81DE-97A56986CCF8}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>NeuralNetworks</RootNamespace>
+    <AssemblyName>NeuralNetworks</AssemblyName>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>none</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="Mono.CSharp" />
+    <Reference Include="System.Core" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="Convolutional\CLayer.cs" />
+    <Compile Include="Layer\FullyConnectedLayer.cs" />
+    <Compile Include="Layer\ISingleLayer.cs" />
+    <Compile Include="SingleLayerNetwork.cs" />
+    <Compile Include="Layer\Composition\CompositeLayer.cs" />
+    <Compile Include="Layer\Composition\LayerCompositor.cs" />
+    <Compile Include="Layer\Composition\ICompositeLayer.cs" />
+    <Compile Include="Layer\Composition\ConsList.cs" />
+    <Compile Include="Layer\Composition\OutputLayer.cs" />
+    <Compile Include="NetworkBuilder.cs" />
+    <Compile Include="NeuralNetwork.cs" />
+    <Compile Include="Layer\LayerBuilder.cs" />
+    <Compile Include="Layer\ConvolutionalLayer.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <Folder Include="Convolutional\" />
+    <Folder Include="Layer\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\base\src\Base.csproj">
+      <Project>{C78DCD68-43F0-47E5-ABC7-72B5E74C83AC}</Project>
+      <Name>Base</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\math\src\Math.csproj">
+      <Project>{E6361C07-480A-4F85-87CE-89F2ED3B8277}</Project>
+      <Name>Math</Name>
+    </ProjectReference>
+  </ItemGroup>
+</Project>

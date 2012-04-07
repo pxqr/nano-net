@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>10.0.0</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{E8D8CFD4-0804-4DD4-8EFC-75F24DB89A18}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>nanon</RootNamespace>
+    <AssemblyName>nanon</AssemblyName>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
+    <Externalconsole>true</Externalconsole>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <DebugType>none</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
+    <Externalconsole>true</Externalconsole>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data.Linq" />
+    <Reference Include="System.Core" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Main.cs" />
+    <Compile Include="AssemblyInfo.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <ProjectReference Include="..\math\src\Math.csproj">
+      <Project>{E6361C07-480A-4F85-87CE-89F2ED3B8277}</Project>
+      <Name>Math</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\base\src\Base.csproj">
+      <Project>{C78DCD68-43F0-47E5-ABC7-72B5E74C83AC}</Project>
+      <Name>Base</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\learning\src\Learning.csproj">
+      <Project>{B83429E8-0109-4C62-BDD7-3CE746B0C20A}</Project>
+      <Name>Learning</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\statistics\src\Statistics.csproj">
+      <Project>{698E7D64-69A3-4EEE-8942-3A933075FBA4}</Project>
+      <Name>Statistics</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\neural-networks\src\NeuralNetworks.csproj">
+      <Project>{3E62FA99-FA0D-47FB-81DE-97A56986CCF8}</Project>
+      <Name>NeuralNetworks</Name>
+    </ProjectReference>
+  </ItemGroup>
+</Project>
