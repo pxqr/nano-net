@@ -14,7 +14,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\bin</OutputPath>
+    <OutputPath>..\..\..\bin\math\</OutputPath>
     <DefineConstants>DEBUG;</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -23,7 +23,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\bin</OutputPath>
+    <OutputPath>..\..\..\bin\math\</OutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
@@ -48,12 +48,9 @@
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="Linear\Matrix.cs" />
     <Compile Include="Linear\Vector.cs" />
-    <Compile Include="Sigmoid\Sigmoids.cs" />
-    <Compile Include="Activator\IActivator.cs" />
-    <Compile Include="Activator\Tanh.cs" />
-    <Compile Include="Activator\Logistic.cs" />
     <Compile Include="Series\Series.cs" />
     <Compile Include="Linear\Normalization.cs" />
+    <Compile Include="Activator\Activator.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -64,7 +61,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Linear\" />
-    <Folder Include="Sigmoid\" />
     <Folder Include="Series\" />
   </ItemGroup>
 </Project>

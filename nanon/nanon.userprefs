@@ -1,17 +1,17 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="../math/src/Linear/Matrix.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="../math/src/Activator/Activator.cs">
     <Files>
-      <File FileName="Main.cs" Line="39" Column="18" />
-      <File FileName="../neural-networks/src/Layer/Composition/LayerCompositor.cs" Line="33" Column="24" />
-      <File FileName="../neural-networks/src/Layer/LayerBuilder.cs" Line="7" Column="3" />
-      <File FileName="../neural-networks/src/NetworkBuilder.cs" Line="42" Column="1" />
-      <File FileName="../neural-networks/src/Layer/ConvolutionalLayer.cs" Line="3" Column="21" />
-      <File FileName="../math/src/Linear/Matrix.cs" Line="487" Column="24" />
+      <File FileName="Main.cs" Line="9" Column="25" />
+      <File FileName="../learning/src/Optimization/GradientDescent.cs" Line="81" Column="7" />
+      <File FileName="../neural-networks/src/Layer/FullyConnectedLayer.cs" Line="19" Column="74" />
+      <File FileName="../neural-networks/src/NeuralNetwork.cs" Line="1" Column="1" />
+      <File FileName="../neural-networks/src/NetworkBuilder.cs" Line="55" Column="13" />
+      <File FileName="../math/src/Activator/Activator.cs" Line="10" Column="36" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
-        <State expanded="True">
+        <State expanded="True" selected="True">
           <Node name="Base" expanded="True">
             <Node name="Data" expanded="True" />
             <Node name="Model" expanded="True" />
@@ -22,11 +22,8 @@
           </Node>
           <Node name="Math" expanded="True">
             <Node name="Activator" expanded="True" />
-            <Node name="Linear" expanded="True">
-              <Node name="Matrix.cs" selected="True" />
-            </Node>
+            <Node name="Linear" expanded="True" />
             <Node name="Series" expanded="True" />
-            <Node name="Sigmoid" expanded="True" />
           </Node>
           <Node name="nanon" expanded="True" />
           <Node name="NeuralNetworks" expanded="True">

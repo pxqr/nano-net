@@ -72,10 +72,15 @@ namespace Nanon.Learning.Optimization
 		
 		void Update(IHypothesis<InputT, OutputT> hypothesis, Vector[] grads, double coeff)
 		{
+			var layerNum = 1;
 			// correct hypothesis
 			foreach(var gradient in grads)
-				gradient.Transform(x => x * coeff);
-					
+			{
+				var finalFactor = coeff * (1.0d / (double)layerNum);
+				gradient.Multiply(finalFactor, gradient);
+				//++layerNum;
+			}
+			
 			hypothesis.Correct(grads);
 		}
 		

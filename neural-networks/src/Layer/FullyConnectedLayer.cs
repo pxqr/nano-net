@@ -16,7 +16,7 @@ namespace Nanon.NeuralNetworks.Layer
 		Vector outputs;  
 		Matrix gradient;
 		
-		public static Logistic defaultActivator = new Logistic();
+		public static IActivator defaultActivator = new Nanon.Math.Activator.Tanh();
 		
 		public FullyConnectedLayer(int inputSize, int outputSize, IActivator activationFunction)
 		{

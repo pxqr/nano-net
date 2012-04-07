@@ -7,7 +7,6 @@ using Nanon.Data;
 using Nanon.Learning.Optimization;
 using Nanon.Learning.Tools;
 using Nanon.Math.Linear;
-using Nanon.Math.Sigmoid;
 using Nanon.Model.Classifier;
 using Nanon.Statistics.Linear;
 using Nanon.Statistics.Logistic;
@@ -36,7 +35,7 @@ namespace Nanon
 			var inputsNormalizator = new Normalization(dataSet.Inputs.ToArray());
 			dataSet.TransformInputs(inputsNormalizator.Normalize);
 			
-			return dataSet.Take(100);
+			return dataSet;
 		}
 		
 		static void Test(NeuralNetwork<Vector,Vector> network, IDataSet<Vector, Vector> dataSet)
@@ -48,8 +47,9 @@ namespace Nanon
 			var ctester = new ClassifierTester<Vector, Vector, int>(classifier, x => x.IndexOfMax);
 			var accuracy = ctester.Test(dataSet);
 				
-			Console.WriteLine("cost {0}, accuracy {1}%", cost, accuracy * 10);
+			Console.WriteLine("cost {0}, accuracy {1}%", cost, accuracy * 100);
 		}
+		
 		/*
 		static bool CheckModel(SingleLayerNetwork<Vector> network, Vector input, Vector output)
 		{
@@ -60,14 +60,15 @@ namespace Nanon
 			return diff.EuclideanNorm < 0.01;
 		}
 		*/
+		
 		public static void Main (string[] args)
 		{				
 			var dataSet   = LoadDataSet();
 			var network   = NetworkBuilder.Create(dataSet
-			                ,   new List<int> { 100 }
+			                //,   new List<int> { 10 }
 							);
 			
-			var optimizer = new GradientDescent<Vector, Vector>(4, .001, x => 1, 5);
+			var optimizer = new GradientDescent<Vector, Vector>(8, .001, x => 1, 5);
 			var trainer   = new Trainer<Vector, Vector>(optimizer);
 			
 			Console.WriteLine("Initial");
