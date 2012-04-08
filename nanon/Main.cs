@@ -58,6 +58,7 @@ namespace Nanon
 			Console.WriteLine("cost {0}, accuracy {1}%", cost, accuracy * 100);
 		}
 		
+		
 		/*
 		static bool CheckModel(SingleLayerNetwork<Vector> network, Vector input, Vector output)
 		{
@@ -74,11 +75,13 @@ namespace Nanon
 			var dataSet   = LoadDataSet();
 			var network   = NetworkBuilder.Create(dataSet
 			                , new Tanh()
-			                //, new List<int> { 50 }
+			                , new List<int> { 50 }
 							);
 			
 			var optimizer = new GradientDescent<Vector, Vector>(10, .1, x => 1, 5);
 			var trainer   = new Trainer<Vector, Vector>(optimizer);
+			
+			
 			
 			Console.WriteLine("Initial");
 			Test(network, dataSet);

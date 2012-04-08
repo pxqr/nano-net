@@ -35,7 +35,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
-    <Compile Include="Convolutional\CLayer.cs" />
     <Compile Include="Layer\FullyConnectedLayer.cs" />
     <Compile Include="Layer\ISingleLayer.cs" />
     <Compile Include="SingleLayerNetwork.cs" />
@@ -48,11 +47,18 @@
     <Compile Include="NeuralNetwork.cs" />
     <Compile Include="Layer\LayerBuilder.cs" />
     <Compile Include="Layer\ConvolutionalLayer.cs" />
+    <Compile Include="Convolutional\ShrinkLayer.cs" />
+    <Compile Include="Convolutional\Subsampler.cs" />
+    <Compile Include="Convolutional\Contractor.cs" />
+    <Compile Include="Convolutional\Convolutor.cs" />
+    <Compile Include="Layer\Composition\Spreader.cs" />
+    <Compile Include="GraphBased\Neuron.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <Folder Include="Convolutional\" />
     <Folder Include="Layer\" />
+    <Folder Include="GraphBased\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\base\src\Base.csproj">

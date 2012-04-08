@@ -479,21 +479,21 @@ namespace Nanon.Math.Linear
 			var inputCells   = matrix.cells;
 			var kernelCells  = kernel.cells;
 				
-			for (var row = heightCutOff; row < inputHeight - heightCutOff; ++row)
-			    for (var col = widthCutOff; col < inputWidth - widthCutOff; ++col)
+			for (var row = 0; row <= inputHeight - kernelHeight; ++row)
+			    for (var col = 0; col <= inputWidth - kernelWidth; ++col)
 				{
 					var acc = 0.0d;
 				
-			    	for (var j = -heightCutOff; j <= heightCutOff; ++j)
+			    	for (var j = row; j < row + kernelHeight; ++j)
 					{
-						//inputOffset  = col + (row + j) * inputWidth;
-						//kernelOffset = 0; 
+						var inputOffset  = col + j * inputWidth;
+						var kernelOffset = (j - row) * kernel.width; 
 					                
-			     		//for (var i = -widthCutOff; i <= widthCutOff; ++i)
-						///	acc += inputCells[inputOffset++] * kernelCells[kernelOffset++];
+			     		for (var i = 0; i < kernelWidth; ++i)
+							acc += inputCells[inputOffset++] * kernelCells[kernelOffset++];
 					}
 							
-				    var resIndex = (col - widthCutOff) + (row - heightCutOff) * outputWidth;
+				    var resIndex = col + row * outputWidth;
 					resCells[resIndex] = acc;
 				}
 		}
