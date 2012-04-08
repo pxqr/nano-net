@@ -87,7 +87,7 @@ namespace Nanon.Math.Linear
 				throw new ArgumentException("size less than index");
 			
 			var v = new Vector(size);
-			v.Transform(zval);
+			v.Transform(x => zval);
 			
 			v.cells[index] = ival;
 			return v;

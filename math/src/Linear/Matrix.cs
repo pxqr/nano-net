@@ -64,10 +64,13 @@ namespace Nanon.Math.Linear
 		
 		public static Matrix[] FromFile(string filename) 
 		{
-			using (var reader = new BinaryReader(File.Open(filename, FileMode.Open)))
+			using (var stream = new BufferedStream(File.Open(filename, FileMode.Open), 20000))
 			{
-				var file = new DataFile(reader);
-				return Matrix.FromDataFile(file);
+				using (var reader = new BinaryReader(stream))
+				{
+					var file = new DataFile(reader);
+					return Matrix.FromDataFile(file);
+				}
 			}
 		}
 		

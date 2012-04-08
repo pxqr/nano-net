@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Collections.Generic;
 
+using Nanon.Math.Activator;
 using Nanon.Data;
 using Nanon.Learning.Optimization;
 using Nanon.Learning.Tools;
@@ -18,34 +19,41 @@ namespace Nanon
 {
 	class MainClass
 	{
+		static string trainImagesPath = "/home/redner/projects/nanon/data/train-images.data"; 
+		static string trainLabelsPath = "/home/redner/projects/nanon/data/train-labels.data"; 	
+		static string testImagesPath = "/home/redner/projects/nanon/data/test-images.data"; 
+		static string testLabelsPath = "/home/redner/projects/nanon/data/test-labels.data"; 
+		static DataSet<Vector, Vector> testDataSet;
+		
+		static DataSet<Vector, Vector> Load(string trainImagesPath, string trainLabelsPath)
+		{
+			Console.WriteLine("Load data from {0} \n{1}", trainImagesPath, trainLabelsPath);
+			return DataSet<Matrix, Matrix>.FromFile(trainImagesPath, trainLabelsPath)
+				   				          .Convert(x => x.ToVector, 
+				                 				   x => Vector.FromIndex((int)x.Cells[0], 10, -1.0d, 1.0d));
+		}
 		
 		static DataSet<Vector, Vector> LoadDataSet()
 		{
-			//var imagesPath = "/home/redner/projects/nanon/data/train-images.data"; //args[0];
-			//var labelsPath = "/home/redner/projects/nanon/data/train-labels.data"; //args[1];	
-			var imagesPath = "/home/redner/projects/nanon/data/test-images.data"; //args[0];
-			var labelsPath = "/home/redner/projects/nanon/data/test-labels.data"; //args[1];	
-			
-			Console.WriteLine("Load data");
-			var dataSet   = DataSet<Matrix, Matrix>.FromFile(imagesPath, labelsPath)
-				           .Convert(x => x.ToVector, 
-				                    x => Vector.FromIndex((int)x.Cells[0], 10));
+			var trainDataSet   = Load(trainImagesPath, trainLabelsPath);
+			testDataSet    = Load (testImagesPath, testLabelsPath);
 			
 			Console.WriteLine("Normalize data");
-			var inputsNormalizator = new Normalization(dataSet.Inputs.ToArray());
-			dataSet.TransformInputs(inputsNormalizator.Normalize);
+			var inputsNormalizator = new Normalization(trainDataSet.Inputs.ToArray());
+			trainDataSet.TransformInputs(inputsNormalizator.Normalize);
+			testDataSet.TransformInputs(inputsNormalizator.Normalize);
 			
-			return dataSet;
+			return trainDataSet;
 		}
 		
 		static void Test(NeuralNetwork<Vector,Vector> network, IDataSet<Vector, Vector> dataSet)
 		{
 			var rtester = new HypothesisTester<Vector, Vector>(network);
-			var cost = rtester.Test(dataSet);
+			var cost = rtester.Test(testDataSet);
 			    
 			var classifier = new MaxFitClassifier<Vector>(network);				
 			var ctester = new ClassifierTester<Vector, Vector, int>(classifier, x => x.IndexOfMax);
-			var accuracy = ctester.Test(dataSet);
+			var accuracy = ctester.Test(testDataSet);
 				
 			Console.WriteLine("cost {0}, accuracy {1}%", cost, accuracy * 100);
 		}
@@ -65,20 +73,18 @@ namespace Nanon
 		{				
 			var dataSet   = LoadDataSet();
 			var network   = NetworkBuilder.Create(dataSet
-			                //,   new List<int> { 10 }
+			                , new Tanh()
+			                //, new List<int> { 50 }
 							);
 			
-			var optimizer = new GradientDescent<Vector, Vector>(8, .001, x => 1, 5);
+			var optimizer = new GradientDescent<Vector, Vector>(10, .1, x => 1, 5);
 			var trainer   = new Trainer<Vector, Vector>(optimizer);
 			
 			Console.WriteLine("Initial");
 			Test(network, dataSet);
 			Console.WriteLine("StartLearning");
 			
-			Console.Write("Check Gradients");
-			//Console.WriteLine(CheckModel(network, dataSet.FirstInput, dataSet.FirstOutput));
-			
-			for (int i = 0; i < 10; ++i)
+			for (int i = 0; i < 5; ++i)
 			{
 				trainer.Train(network, dataSet);
 				Test(network, dataSet);
