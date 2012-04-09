@@ -48,6 +48,8 @@
     <Compile Include="GraphBased\Neuron.cs" />
     <Compile Include="Layer\Composition\Splitter.cs" />
     <Compile Include="Layer\Composition\Merger.cs" />
+    <Compile Include="Layer\Composition\VectorMerger.cs" />
+    <Compile Include="Convolutional\VectorSubsampler.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

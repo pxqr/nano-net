@@ -50,7 +50,7 @@ namespace Nanon.Math.Linear
 			var size = iTo - iFrom;
 			
 			for (var i = 0; i < size; ++i)
-				cells[i] = vec.cells[i + iFrom];
+				cells[i + iFrom] = vec.cells[i];
 		}
 		
 		public int IndexOfMax

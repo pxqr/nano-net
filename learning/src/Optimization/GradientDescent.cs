@@ -22,16 +22,22 @@ namespace Nanon.Learning.Optimization
 		int initialStepSize = 1;
 		double learningRate = 1;
 		bool showInfo = true;
+		Action<IHypothesis<InputT, OutputT>> callback;
 	
 		//  learningProgression series should ever divergent!
 		Func<int, double> learningProgression =  Series.HarmonicSeries;
 		
-		public GradientDescent(int iterationCountP, double learningRateP, Func<int, double> learningProgressionA, int initialStepSizeP = 1)
+		public GradientDescent(int iterationCountP, 
+		                       double learningRateP, 
+		                       Func<int, double> learningProgressionA, 
+		                       int initialStepSizeP,
+		                       Action<IHypothesis<InputT, OutputT>> callbackA)
 		{
 			iterationCount  = iterationCountP;
 			learningRate    = learningRateP;
 			initialStepSize = initialStepSizeP;
 			learningProgression = learningProgressionA;
+			callback = callbackA;
 		}
 		
 		public bool ShowInfo 
@@ -66,11 +72,6 @@ namespace Nanon.Learning.Optimization
 		
 		void DoGradientStep(IHypothesis<InputT, OutputT> hypothesis, IEnumerable<Tuple<InputT, OutputT> > exsamples, double coeff, int stepSize)
 		{
-			var inputCount   = exsamples.Count();
-			
-			//  prevent to passing a small inputs away without weigths have been changed
-			var boundedStepSize = System.Math.Min(stepSize, inputCount);
-				
 			var batchSize = 0;
 			
 			foreach(var ex in exsamples)
@@ -79,7 +80,7 @@ namespace Nanon.Learning.Optimization
 				
 				++batchSize;
 				
-				if (batchSize == boundedStepSize)
+				if (batchSize == stepSize)
 				{
 					var factor  = (coeff / (double)batchSize) * learningRate;
 					hypothesis.Correct(factor);
@@ -100,19 +101,17 @@ namespace Nanon.Learning.Optimization
 				return;
 			
 			var stepSize = initialStepSize;
-			var watcher = new Stopwatch();
-			watcher.Start();
 			
 			for (var iteration = 1; iteration <= iterationCount; ++iteration)
 			{
 				var coeff =  learningProgression(iteration);
 				DoGradientStep(hypothesis, exsamples, coeff, stepSize);
-				
 				stepSize *= 2;
+				
+				if (showInfo)
+					callback(hypothesis);
+				
 			}
-			
-			watcher.Stop();
-			Console.WriteLine(watcher.ElapsedMilliseconds);
 		}
 	}
 }

@@ -17,6 +17,16 @@ namespace Nanon.NeuralNetworks.Layer.Composition
 			second = snd;
 		}
 		
+		public static ICompositeLayer<A, B> Singleton<A, B>(ISingleLayer<A, B> fst)
+		{
+			return new CompositeLayer<A, B, B>(fst, new OutputLayer<B>());
+		}
+		
+		public static ICompositeLayer<A, C> Compose2<A, B, C>(ISingleLayer<A, B> fst, ISingleLayer<B, C> snd)
+		{
+			return new CompositeLayer<A, B, C>(fst, Singleton<B, C>(snd));
+		}
+		
 		#region ICompositeLayer[InputT,OutputT] implementation
 		
 		public OutputT FeedForward(InputT input)

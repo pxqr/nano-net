@@ -9,6 +9,7 @@ using Nanon.Learning.Optimization;
 using Nanon.Learning.Tools;
 using Nanon.Math.Linear;
 using Nanon.Model.Classifier;
+using Nanon.Model;
 using Nanon.Statistics.Linear;
 using Nanon.Statistics.Logistic;
 using Nanon.NeuralNetworks;
@@ -30,13 +31,13 @@ namespace Nanon
 			Console.WriteLine("Load data from {0} \n{1}", trainImagesPath, trainLabelsPath);
 			return DataSet<Matrix, Matrix>.FromFile(trainImagesPath, trainLabelsPath)
 				   				          .Convert(x => x.ToVector, 
-				                 				   x => Vector.FromIndex((int)x.Cells[0], 10, -0.2d, 0.2d));
+				                 				   x => Vector.FromIndex((int)x.Cells[0], 10, -1.0d, 1.0d));
 		}
 		
 		static DataSet<Vector, Vector> LoadDataSet()
 		{
-			var trainDataSet   = Load(trainImagesPath, trainLabelsPath).Take (1000);
-			testDataSet    = Load (testImagesPath, testLabelsPath);
+			var trainDataSet   = Load(trainImagesPath, trainLabelsPath).Take (200);
+			testDataSet    = Load (testImagesPath, testLabelsPath).Take (200);
 			
 			Console.WriteLine("Normalize data");
 			var inputsNormalizator = new Normalization(trainDataSet.Inputs.ToArray());
@@ -46,7 +47,7 @@ namespace Nanon
 			return trainDataSet;
 		}
 		
-		static void Test(NeuralNetwork<Vector> network, IDataSet<Vector, Vector> dataSet)
+		static double Test(IHypothesis<Vector, Vector> network, IDataSet<Vector, Vector> dataSet, double oldcost = Double.PositiveInfinity)
 		{
 			var rtester = new RegressionTester<Vector>(network);
 			var cost = rtester.Test(dataSet);
@@ -56,17 +57,27 @@ namespace Nanon
 			var accuracy = ctester.Test(dataSet);
 				
 			Console.WriteLine("cost {0}, accuracy {1}%", cost, accuracy * 100);
+			if (oldcost < cost)
+				Console.WriteLine("Warning: probably weights will divergent!");
+			
+			return cost;
 		}
 		
 		public static void Main (string[] args)
 		{				
 			var dataSet   = LoadDataSet();
-			var network   = NetworkBuilder.Create(dataSet
-			                , new Tanh()
-			                , new List<int> { 50 }
-							);
+			var network   = Nanon.Test.MergerSplitterTest.Test(dataSet);
+							//NetworkBuilder.Create(dataSet
+			                //, new Tanh()
+			                //, new List<int> { 20 }
+							//);
 			
-			var optimizer = new GradientDescent<Vector, Vector>(5, .01, x => 1, 5);
+			var cost = Double.PositiveInfinity;
+			var optimizer = new GradientDescent<Vector, Vector>(10, 1, x =>1, 5, 
+			    x => { 
+					cost = Test(x, dataSet, cost); 
+				});
+			
 			var trainer   = new Trainer<Vector, Vector>(optimizer);
 			
 			
@@ -74,9 +85,11 @@ namespace Nanon
 			Test(network, testDataSet);
 			Console.WriteLine("StartLearning");
 			
-			for (int i = 0; i < 10; ++i)
+			for (int i = 0; i < 5; ++i)
 			{
 				trainer.Train(network, dataSet);
+				optimizer.InitialStepSize *= 2;
+				optimizer.IterationCount += 20;
 				
 				Console.Write("train set: ");
 				Test(network, dataSet);
