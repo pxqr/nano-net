@@ -2,6 +2,7 @@ using System;
 
 using Nanon.Data;
 using Nanon.Model.Classifier;
+using Nanon.Math.Linear;
 
 namespace Nanon.Learning.Tools
 {
@@ -34,6 +35,15 @@ namespace Nanon.Learning.Tools
 			}
 				
 			return (double)correctCount / (double)setSize;
+		}
+		
+		public	static double CostFunction(Vector prediction, Vector output)
+		{
+			var iftrue     = prediction.Map(System.Math.Log) * output;
+			var iffals     = prediction.Map(x => System.Math.Log(1 - x)) * output.Map(x => 1 - x);
+			if (Double.IsNaN(iffals) || Double.IsNaN(iftrue))
+				return 0;
+			return - (iftrue + iffals);
 		}
 	}
 }

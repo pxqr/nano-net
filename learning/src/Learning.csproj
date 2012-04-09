@@ -40,8 +40,6 @@
     <Compile Include="Tools\ITester.cs" />
     <Compile Include="Tools\RegressionTester.cs" />
     <Compile Include="Tools\ClassifierTester.cs" />
-    <Compile Include="Tools\HypothesisTester.cs" />
-    <Compile Include="Tools\GradientTester.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

@@ -1,17 +1,15 @@
 using Nanon.Math.Linear;
 
+using Nanon.Model.Regression;
+
 namespace Nanon.Model
 {
 	//
 	// hypothesis is the interface for trainable instance
 	// which can become a trained regression or not (in worst case)
 	//
-	public interface IHypothesis<InputT, OutputT>
+	public interface IHypothesis<InputT, OutputT> : IRegression<InputT, OutputT>
 	{
-		// returns value which could tell how close 
-		// current hypothesis to ideal hypothesis
-		double Cost(InputT input, OutputT output);
-		
 		// to recreate internal gradient structure
 		Vector[] ZeroGradient { get; } 
 		

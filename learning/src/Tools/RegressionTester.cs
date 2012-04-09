@@ -6,19 +6,17 @@ using Nanon.Model.Regression;
 
 namespace Nanon.Learning.Tools
 {
-	public class RegressionTester<InputT, OutputT> : ITester<InputT, OutputT>
+	public class RegressionTester<InputT> : ITester<InputT, Vector>
 	{
-		IRegression<InputT, OutputT> regression;
-		Func<OutputT, OutputT, double> cost;
+		IRegression<InputT, Vector> regression;
 			
-		public RegressionTester(IRegression<InputT, OutputT> regressionA, Func<OutputT, OutputT, double> costA)
+		public RegressionTester(IRegression<InputT, Vector> regressionA)
 		{
 			regression = regressionA;
-			cost = costA;
 		}
 		
 		// cost
-		public double Test(IDataSet<InputT, OutputT> dataSet)
+		public double Test(IDataSet<InputT, Vector> dataSet)
 		{
 			int setSize = dataSet.Size;
 			
@@ -29,12 +27,16 @@ namespace Nanon.Learning.Tools
 			
 			foreach(var x in dataSet.Set)
 			{
-				costAcc += cost(regression.Predict(x.Item1), x.Item2);
+				costAcc += Cost(regression.Predict(x.Item1), x.Item2);
 			}
 				
 			return costAcc / (double)setSize;
 		}
 		
+		public static double Cost(Vector prediction, Vector output)
+		{
+			return (prediction - output).EuclideanNorm;
+		}
 	}
 }
 

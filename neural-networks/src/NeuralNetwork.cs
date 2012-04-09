@@ -10,25 +10,19 @@ using Nanon.NeuralNetworks.Layer.Composition;
 
 namespace Nanon.NeuralNetworks
 {
-	public class NeuralNetwork<InputT, OutputT> : IRegression<InputT, OutputT>, IHypothesis<InputT, OutputT>
+	public class NeuralNetwork<InputT> : IHypothesis<InputT, Vector>
 	{
-		ICompositeLayer<InputT, OutputT> layers;
-		Func<OutputT, OutputT, double>   costFunction;
-		Func<OutputT, OutputT, OutputT>  errorFunction;
+		ICompositeLayer<InputT, Vector> layers;
 		
-		public NeuralNetwork(ICompositeLayer<InputT, OutputT> layersA,
-			 					 Func<OutputT, OutputT, double>   costFunctionA,
-		                         Func<OutputT, OutputT, OutputT>  errorFunctionA)
+		public NeuralNetwork(ICompositeLayer<InputT, Vector> layersA)
 		{
 			layers        = layersA;
-			costFunction  = costFunctionA;
-			errorFunction = errorFunctionA;
 		}
 		
 		
 		#region IRegression[InputT,OutputT] implementation
 		
-		public OutputT Predict (InputT input)
+		public Vector Predict (InputT input)
 		{
 			return layers.FeedForward(input);
 		}
@@ -36,17 +30,11 @@ namespace Nanon.NeuralNetworks
 		#endregion
 
 		#region IHypothesis[InputT,OutputT] implementation
-		
-		public double Cost (InputT input, OutputT output)
-		{
-			var prediction = layers.FeedForward(input);
-			return costFunction(prediction, output);
-		}
 
-		public Vector[] Gradient (InputT input, OutputT output)
+		public Vector[] Gradient (InputT input, Vector output)
 		{
 			var prediction = layers.FeedForward(input);
-			var error      = errorFunction(output, prediction);
+			var error      = output - prediction;
 			layers.Backprop(input, error);
 			return layers.Gradient().ToArray();
 		}

@@ -30,7 +30,7 @@ namespace Nanon
 			Console.WriteLine("Load data from {0} \n{1}", trainImagesPath, trainLabelsPath);
 			return DataSet<Matrix, Matrix>.FromFile(trainImagesPath, trainLabelsPath)
 				   				          .Convert(x => x.ToVector, 
-				                 				   x => Vector.FromIndex((int)x.Cells[0], 10, -1.0d, 1.0d));
+				                 				   x => Vector.FromIndex((int)x.Cells[0], 10, -0.2d, 0.2d));
 		}
 		
 		static DataSet<Vector, Vector> LoadDataSet()
@@ -46,14 +46,14 @@ namespace Nanon
 			return trainDataSet;
 		}
 		
-		static void Test(NeuralNetwork<Vector,Vector> network, IDataSet<Vector, Vector> dataSet)
+		static void Test(NeuralNetwork<Vector> network, IDataSet<Vector, Vector> dataSet)
 		{
-			var rtester = new HypothesisTester<Vector, Vector>(network);
-			var cost = rtester.Test(testDataSet);
+			var rtester = new RegressionTester<Vector>(network);
+			var cost = rtester.Test(dataSet);
 			    
 			var classifier = new MaxFitClassifier<Vector>(network);				
 			var ctester = new ClassifierTester<Vector, Vector, int>(classifier, x => x.IndexOfMax);
-			var accuracy = ctester.Test(testDataSet);
+			var accuracy = ctester.Test(dataSet);
 				
 			Console.WriteLine("cost {0}, accuracy {1}%", cost, accuracy * 100);
 		}
@@ -75,26 +75,32 @@ namespace Nanon
 			var dataSet   = LoadDataSet();
 			var network   = NetworkBuilder.Create(dataSet
 			                , new Tanh()
-			                , new List<int> { 50 }
+			                //, new List<int> { 50 }
 							);
 			
-			var optimizer = new GradientDescent<Vector, Vector>(10, .1, x => 1, 5);
+			var optimizer = new GradientDescent<Vector, Vector>(1, .005, x => 1, 5);
 			var trainer   = new Trainer<Vector, Vector>(optimizer);
 			
 			
-			
 			Console.WriteLine("Initial");
-			Test(network, dataSet);
+			Test(network, testDataSet);
 			Console.WriteLine("StartLearning");
 			
-			for (int i = 0; i < 5; ++i)
+			for (int i = 0; i < 10; ++i)
 			{
 				trainer.Train(network, dataSet);
+				optimizer.Momentum = optimizer.Momentum / 2;
+				optimizer.InitialStepSize += 1;
+				optimizer.IterationCount += 2;
+				
+				Console.Write("train set: ");
 				Test(network, dataSet);
+				Console.Write("test set: ");
+				Test(network, testDataSet);
 			}
 			
 			Console.WriteLine("EndLearning");
-			Test(network, dataSet);
+			Test(network, testDataSet);
 		}
 	}
 }

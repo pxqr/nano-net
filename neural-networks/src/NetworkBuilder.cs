@@ -12,15 +12,15 @@ namespace Nanon.NeuralNetworks
 	public class NetworkBuilder
 	{
 		// single layer network
-		public static NeuralNetwork<Vector, Vector> Create(IDataSet<Vector, Vector> dataSet, IActivator activator)
+		public static NeuralNetwork<Vector> Create(IDataSet<Vector, Vector> dataSet, IActivator activator)
 		{
 			var workLayer = new FullyConnectedLayer(dataSet.FirstInput.Size, dataSet.FirstOutput.Size, activator);
 			var outputLayer = new OutputLayer<Vector>();
 			var layers = new CompositeLayer<Vector, Vector, Vector>(workLayer, outputLayer);
-			return new NeuralNetwork<Vector, Vector>(layers, EuLossFunc, ErrorFunction);
+			return new NeuralNetwork<Vector>(layers);
 		}
 		
-		public static NeuralNetwork<Vector, Vector> Create(IDataSet<Vector, Vector> dataSet, IActivator activator, List<int> hiddenSizes)
+		public static NeuralNetwork<Vector> Create(IDataSet<Vector, Vector> dataSet, IActivator activator, List<int> hiddenSizes)
 		{
 			if (hiddenSizes.Count == 0)
 				return Create(dataSet, activator);
@@ -39,10 +39,10 @@ namespace Nanon.NeuralNetworks
 			
 			var compositeLayer = LayerCompositor.ComposeGeteroneneous(layers);
 			
-			return new NeuralNetwork<Vector, Vector>(compositeLayer, EuLossFunc, ErrorFunction);
+			return new NeuralNetwork<Vector>(compositeLayer);
 		}
 		
-		static NeuralNetwork<Matrix, Vector> CreateTest()
+		static NeuralNetwork<Matrix> CreateTest()
 		{
 			
 			
@@ -53,25 +53,6 @@ namespace Nanon.NeuralNetworks
 			var clayer = new CLayer(28, 28, 24, 24);
 			var layers = new CompositeLayer<Vector, Vector, Vector>(workLayer, outputLayer);
 			return null; //new NeuralNetwork<Vector, Vector>(layers, EuLossFunc, ErrorFunction);
-		}
-		
-		static Vector ErrorFunction(Vector output, Vector prediction)
-		{
-			return output - prediction;
-		}
-		
-		static double CostFunction(Vector prediction, Vector output)
-		{
-			var iftrue     = prediction.Map(System.Math.Log) * output;
-			var iffals     = prediction.Map(x => System.Math.Log(1 - x)) * output.Map(x => 1 - x);
-			if (Double.IsNaN(iffals) || Double.IsNaN(iftrue))
-				return 0;
-			return - (iftrue + iffals);
-		}
-		
-		static double EuLossFunc(Vector prediction, Vector output)
-		{
-			return (prediction - output).EuclideanNorm;
 		}
 	}
 }
