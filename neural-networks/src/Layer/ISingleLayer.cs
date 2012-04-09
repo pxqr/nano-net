@@ -5,8 +5,6 @@ using Nanon.Math.Linear;
 
 namespace Nanon.NeuralNetworks.Layer
 {
-	enum LayerType { FullyConnected, Convolutional };
-	
 	// Layer :: input -> output
 	public interface ISingleLayer<InputT, OutputT>
 	{
@@ -16,13 +14,7 @@ namespace Nanon.NeuralNetworks.Layer
 		OutputT Signal { get; }
 		OutputT Output { get; }
 		
-		void FindGradient(InputT input, OutputT outputError);
-		Vector Gradient();		
+		void Gradient(InputT input, OutputT outputError);		
 		void Correct(Vector gradients);
-		Vector ZeroGradients();
-		
-		// weights
-		//double this [int i] { get; set; }
-		//int WeightsSize  { get; } 
 	}
 }

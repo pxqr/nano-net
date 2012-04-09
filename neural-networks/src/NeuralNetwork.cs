@@ -30,25 +30,17 @@ namespace Nanon.NeuralNetworks
 
 		#region IHypothesis[InputT,OutputT] implementation
 
-		public Vector[] Gradient (InputT input, Vector output)
+		public void Gradient (InputT input, Vector output)
 		{
 			var prediction = layers.FeedForward(input);
 			var error      = output - prediction;
 			layers.Backprop(input, error);
-			return layers.Gradient().ToArray();
+			layers.Gradient().ToArray();
 		}
 
-		public void Correct (Vector[] gradient)
+		public void Correct (double coeff)
 		{
-			layers.Correct(ConsList<Vector>.FromArray(gradient));
-		}
-
-		public Nanon.Math.Linear.Vector[] ZeroGradient 
-		{
-			get 
-			{
-				return layers.ZeroGradients().ToArray();
-			}
+			//layers.Correct(ConsList<Vector>.FromArray(gradient));
 		}
 		
 		#endregion

@@ -90,46 +90,18 @@ namespace Nanon.NeuralNetworks.Layer
 			}
 		}
 		
-		public void FindGradient(Vector input, Vector outputError)
+		public void Gradient()
 		{
 			//Matrix.MultiplyWithTrasposedWithBias(outputError, input, gradient);
-			Matrix.MultiplyWithTrasposed(outputError, Vector.Prepend(input), gradient);
+			var tmp = gradient.ZeroCopy();
+			Matrix.MultiplyWithTrasposed(outputError, Vector.Prepend(input), tmp);
+			gradient = gradient + tmp;
 		}
 		
-		public Vector Gradient()
-		{
-			return gradient.ToVector;
-		}
-		
-		public void Correct(Vector grads)
+		public void Correct(double coeff)
 		{    
-			weights.SubInplace(grads);
+			weights += coeff * gradient;
 		}
-		
-		public Vector ZeroGradients()
-		{ 
-			return weights.ZeroCopy().ToVector;	
-		}
-		
-		public double this [int i] 
-		{ 
-			get
-			{
-				return weights[i];	
-			}
-			set
-			{
-				weights.Cells[i] = value;
-			}
-		}
-		
-		public int WeightsSize  
-		{ 
-			get
-			{
-				return weights.Size;
-			}
-		} 
 		
 		#endregion
 	}
