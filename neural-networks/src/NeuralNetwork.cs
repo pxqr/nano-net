@@ -19,7 +19,6 @@ namespace Nanon.NeuralNetworks
 			layers        = layersA;
 		}
 		
-		
 		#region IRegression[InputT,OutputT] implementation
 		
 		public Vector Predict (InputT input)

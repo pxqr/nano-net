@@ -37,7 +37,6 @@
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="Layer\FullyConnectedLayer.cs" />
     <Compile Include="Layer\ISingleLayer.cs" />
-    <Compile Include="SingleLayerNetwork.cs" />
     <Compile Include="Layer\Composition\CompositeLayer.cs" />
     <Compile Include="Layer\Composition\LayerCompositor.cs" />
     <Compile Include="Layer\Composition\ICompositeLayer.cs" />
