@@ -46,11 +46,14 @@
     <Compile Include="NeuralNetwork.cs" />
     <Compile Include="Layer\LayerBuilder.cs" />
     <Compile Include="GraphBased\Neuron.cs" />
+    <Compile Include="Layer\Composition\Splitter.cs" />
+    <Compile Include="Layer\Composition\Merger.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <Folder Include="Layer\" />
     <Folder Include="GraphBased\" />
+    <Folder Include="Convolutional\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\base\src\Base.csproj">

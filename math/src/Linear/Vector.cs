@@ -34,6 +34,25 @@ namespace Nanon.Math.Linear
 			}
 		}
 		
+		public Vector Cut(int iFrom, int iTo)
+		{
+			var size = iTo - iFrom;
+			var res = new Vector(size);
+			
+			for (var i = 0; i < size; ++i)
+				res.Cells[i] = cells[i + iFrom];
+			
+			return res;
+		}
+		
+		public void Pack(int iFrom, int iTo, Vector vec)
+		{
+			var size = iTo - iFrom;
+			
+			for (var i = 0; i < size; ++i)
+				cells[i] = vec.cells[i + iFrom];
+		}
+		
 		public int IndexOfMax
 		{
 			get

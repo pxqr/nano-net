@@ -58,18 +58,6 @@ namespace Nanon
 			Console.WriteLine("cost {0}, accuracy {1}%", cost, accuracy * 100);
 		}
 		
-		
-		/*
-		static bool CheckModel(SingleLayerNetwork<Vector> network, Vector input, Vector output)
-		{
-			var numgrad   = network.NumericalGradient(input, output);
-			var modelgrad = network.Gradient(input, output);
-			var diff = (numgrad - modelgrad[0]);
-				
-			return diff.EuclideanNorm < 0.01;
-		}
-		*/
-		
 		public static void Main (string[] args)
 		{				
 			var dataSet   = LoadDataSet();

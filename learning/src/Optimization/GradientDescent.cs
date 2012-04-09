@@ -105,11 +105,8 @@ namespace Nanon.Learning.Optimization
 			
 			for (var iteration = 1; iteration <= iterationCount; ++iteration)
 			{
-
-				
 				var coeff =  learningProgression(iteration);
 				DoGradientStep(hypothesis, exsamples, coeff, stepSize);
-				
 				
 				stepSize *= 2;
 			}
