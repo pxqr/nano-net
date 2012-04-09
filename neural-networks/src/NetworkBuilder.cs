@@ -44,14 +44,6 @@ namespace Nanon.NeuralNetworks
 		
 		static NeuralNetwork<Matrix> CreateTest()
 		{
-			
-			
-			var workLayer = new FullyConnectedLayer(24 * 24, 10, new Tanh());
-			var outputLayer = new OutputLayer<Vector>();
-			var olayer = new CompositeLayer<Vector, Vector, Vector>(workLayer, outputLayer);
-			
-			var clayer = new CLayer(28, 28, 24, 24);
-			var layers = new CompositeLayer<Vector, Vector, Vector>(workLayer, outputLayer);
 			return null; //new NeuralNetwork<Vector, Vector>(layers, EuLossFunc, ErrorFunction);
 		}
 	}

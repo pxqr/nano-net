@@ -4,7 +4,7 @@ namespace Nanon.Math.Activator
 	public interface IActivator
 	{
 		double Activate(double x);		
-		double Derivative(double x, double fx);
+		double Derivative(double fx);
 	}
 	
 	public class Logistic : IActivator
@@ -14,7 +14,7 @@ namespace Nanon.Math.Activator
 			return 1 / (1 + System.Math.Exp(-x));
 		}
 		
-		public double Derivative(double x, double fx)
+		public double Derivative(double fx)
 		{
 			return fx * (1 - fx);
 		}
@@ -27,7 +27,7 @@ namespace Nanon.Math.Activator
 			return System.Math.Tanh(x);
 		}
 		
-		public double Derivative(double x, double fx)
+		public double Derivative(double fx)
 		{
 			return 1 - fx * fx;
 		}

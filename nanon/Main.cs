@@ -21,8 +21,8 @@ namespace Nanon
 	{
 		static string trainImagesPath = "/home/redner/projects/nanon/data/train-images.data"; 
 		static string trainLabelsPath = "/home/redner/projects/nanon/data/train-labels.data"; 	
-		static string testImagesPath = "/home/redner/projects/nanon/data/test-images.data"; 
-		static string testLabelsPath = "/home/redner/projects/nanon/data/test-labels.data"; 
+		static string testImagesPath  = "/home/redner/projects/nanon/data/test-images.data"; 
+		static string testLabelsPath  = "/home/redner/projects/nanon/data/test-labels.data"; 
 		static DataSet<Vector, Vector> testDataSet;
 		
 		static DataSet<Vector, Vector> Load(string trainImagesPath, string trainLabelsPath)
@@ -35,7 +35,7 @@ namespace Nanon
 		
 		static DataSet<Vector, Vector> LoadDataSet()
 		{
-			var trainDataSet   = Load(trainImagesPath, trainLabelsPath);
+			var trainDataSet   = Load(trainImagesPath, trainLabelsPath).Take (1000);
 			testDataSet    = Load (testImagesPath, testLabelsPath);
 			
 			Console.WriteLine("Normalize data");
@@ -75,10 +75,10 @@ namespace Nanon
 			var dataSet   = LoadDataSet();
 			var network   = NetworkBuilder.Create(dataSet
 			                , new Tanh()
-			                //, new List<int> { 50 }
+			                , new List<int> { 50 }
 							);
 			
-			var optimizer = new GradientDescent<Vector, Vector>(1, .005, x => 1, 5);
+			var optimizer = new GradientDescent<Vector, Vector>(5, .01, x => 1, 5);
 			var trainer   = new Trainer<Vector, Vector>(optimizer);
 			
 			
@@ -89,9 +89,6 @@ namespace Nanon
 			for (int i = 0; i < 10; ++i)
 			{
 				trainer.Train(network, dataSet);
-				optimizer.Momentum = optimizer.Momentum / 2;
-				optimizer.InitialStepSize += 1;
-				optimizer.IterationCount += 2;
 				
 				Console.Write("train set: ");
 				Test(network, dataSet);

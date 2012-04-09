@@ -15,6 +15,7 @@ namespace Nanon.NeuralNetworks.Layer
 		Vector signals;
 		Vector outputs;  
 		Matrix gradient;
+		Vector predError;
 		
 		public static IActivator defaultActivator = new Nanon.Math.Activator.Tanh();
 		
@@ -26,6 +27,7 @@ namespace Nanon.NeuralNetworks.Layer
 			
 			outputs = new Vector(outputSize);
 			signals = new Vector(outputSize);
+			predError = new Vector(inputSize);
 			
 			activator = activationFunction;
 			
@@ -62,8 +64,7 @@ namespace Nanon.NeuralNetworks.Layer
 		public Vector PropagateBackward(Vector predSignal, Vector predOutput, Vector error)
 		{
 			// der = f'(predSignal)
-			var der = predSignal.ZipWith(predOutput, activator.Derivative);
-			var predError = predOutput.ZeroCopy();
+			var der = predSignal.Map(activator.Derivative);
 			
 			// predError = W' * error			
 			Matrix.MultiplyHorizontalWithoutBias(error, weights, predError);
@@ -90,17 +91,28 @@ namespace Nanon.NeuralNetworks.Layer
 			}
 		}
 		
-		public void Gradient()
+		public void Gradient(Vector input, Vector outputError)
 		{
-			//Matrix.MultiplyWithTrasposedWithBias(outputError, input, gradient);
-			var tmp = gradient.ZeroCopy();
-			Matrix.MultiplyWithTrasposed(outputError, Vector.Prepend(input), tmp);
-			gradient = gradient + tmp;
+			Matrix.MultiplyWithTrasposedWithBiasAdd(outputError, input, gradient);
+			//var tmp = gradient.ZeroCopy();
+			//Matrix.MultiplyWithTrasposed(outputError, Vector.Prepend(input), tmp);
+			//gradient = gradient + tmp;
 		}
 		
 		public void Correct(double coeff)
 		{    
-			weights += coeff * gradient;
+			var grads = gradient.Cells;
+			var weigs = weights.Cells;
+			var size  = grads.Length;
+			
+			for (var i = 0; i < size; ++i)
+			{
+				weigs[i] -= grads[i] * coeff;
+				grads[i] = 0.0d;	
+			}
+			
+			// weights -= gradients * coeff;
+			// gradient.SetToZero();
 		}
 		
 		#endregion

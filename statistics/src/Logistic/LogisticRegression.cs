@@ -5,7 +5,7 @@ using Nanon.Model.Regression;
 
 namespace Nanon.Statistics.Logistic
 {
-	public class LogisticRegression : IHypothesis<Vector, double>, IRegression<Vector, double>
+	public class LogisticRegression //: IHypothesis<Vector, double>, IRegression<Vector, double>
 	{
 		IActivator activator;
 		Vector weights;

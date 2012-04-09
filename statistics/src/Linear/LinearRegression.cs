@@ -4,7 +4,7 @@ using Nanon.Math.Linear;
 
 namespace Nanon.Statistics.Linear
 {
-	public class LinearRegression : IHypothesis<Vector, double>, IRegression<Vector, double>
+	public class LinearRegression //: IHypothesis<Vector, double>, IRegression<Vector, double>
 	{
 		Vector weights;
 		

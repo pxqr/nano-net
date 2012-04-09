@@ -31,6 +31,14 @@ namespace Nanon.Math.Linear
 			return res;
 		}
 		
+		public void SetToZero()
+		{
+			var size  = Size;
+			
+			for (var i = 0; i < size; ++i)
+				cells[i] = 0.0d;
+		}
+		
 		public Matrix(int w, int h) {
 			cells  = new double[w * h];
 			width  = w;
@@ -355,12 +363,12 @@ namespace Nanon.Math.Linear
 			}
 		}
 		
-		public static void MultiplyWithTrasposedWithBias(Vector lhs, Vector rhs, Matrix res)
+		public static void MultiplyWithTrasposedWithBiasAdd(Vector lhs, Vector rhs, Matrix res)
 		{
 			var sizeL = lhs.Size;
-			var sizeR = rhs.Size;
+			var sizeR = rhs.Size + 1;
 			
-			if (res.height != sizeL || res.width != (sizeR + 1))
+			if (res.height != sizeL || res.width != sizeR)
 				throw new ArgumentException("Incorrect sizes.");
 			    
 			var lhsCells = lhs.Cells;
@@ -372,9 +380,11 @@ namespace Nanon.Math.Linear
 			{
 				var offset = j * sizeR;
 				var left   = lhsCells[j];
-				resCells[offset] = left;
+				
+				resCells[offset++] += left;
+				
 				for (var i = 0; i < sizeR - 1; ++i)
-			      resCells[i + 1 + offset] = left * rhsCells[i];
+			      resCells[i + offset] += left * rhsCells[i];
 			}
 		}
 		
@@ -394,11 +404,11 @@ namespace Nanon.Math.Linear
 			{
 				var rowOffset = rowIndex * mwidth;
 				// bias term
-				double acc = matrix[rowOffset];
+				double acc = matrix[rowOffset++];
 				
 				for(var i = 0; i < vwidth; ++i)
 				{
-					acc += matrix[rowOffset + i + 1] * vector[i];
+					acc += matrix[rowOffset + i] * vector[i];
 				}
 				
 				res.Cells[rowIndex] = acc;

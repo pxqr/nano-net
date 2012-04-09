@@ -12,9 +12,7 @@ namespace Nanon.NeuralNetworks.Layer.Composition
 		void Backprop(InputT input, OutputT error);
 		InputT  PropagateBackward(InputT input, InputT signal, OutputT error);
 		
-		ConsList<Vector> Gradient();		
-		void   Correct(ConsList<Vector> gradients);
-		ConsList<Vector> ZeroGradients();
+		void   Correct(double gradients);
 	}
 }
 

@@ -15,6 +15,6 @@ namespace Nanon.NeuralNetworks.Layer
 		OutputT Output { get; }
 		
 		void Gradient(InputT input, OutputT outputError);		
-		void Correct(Vector gradients);
+		void Correct(double gradients);
 	}
 }

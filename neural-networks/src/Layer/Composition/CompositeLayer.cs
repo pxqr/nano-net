@@ -29,45 +29,22 @@ namespace Nanon.NeuralNetworks.Layer.Composition
 		public InputT PropagateBackward(InputT input, InputT signal, OutputT error)
 		{
 			var errorInHiddenLayer = second.PropagateBackward(first.Output, first.Signal, error);
-			first.FindGradient(input, errorInHiddenLayer);
+			first.Gradient(input, errorInHiddenLayer);
 			return first.PropagateBackward(input, signal, errorInHiddenLayer);
 		}
 		
 		public void Backprop(InputT input, OutputT error)
 		{
 			var errorInHiddenLayer = second.PropagateBackward(first.Output, first.Signal, error);
-			first.FindGradient(input, errorInHiddenLayer);
+			first.Gradient(input, errorInHiddenLayer);
 		}
 
-		public ConsList<Vector> Gradient()
+		public void Correct(double coeff)
 		{
-			var fgrad = first.Gradient();
-			var restGrads = second.Gradient();
-			
-			return ConsList<Vector>.Cons(fgrad, restGrads);
-		}
-
-		public void Correct(ConsList<Vector> gradients)
-		{
-			first.Correct(gradients.Head);
-			second.Correct(gradients.Tail);
-		}
-
-		public ConsList<Vector> ZeroGradients()
-		{
-			var fgrad = first.ZeroGradients();
-			var restGrads = second.ZeroGradients();
-			
-			return ConsList<Vector>.Cons(fgrad, restGrads);
-		}
-
-		public OutputT Signal {
-			get {
-				throw new System.NotImplementedException ();
-			}
+			first.Correct(coeff);
+			second.Correct(coeff);
 		}
 		
 		#endregion
 	}
 }
-

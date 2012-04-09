@@ -27,7 +27,8 @@ namespace Nanon.Learning.Tools
 			
 			foreach(var x in dataSet.Set)
 			{
-				costAcc += Cost(regression.Predict(x.Item1), x.Item2);
+				var prediction = regression.Predict(x.Item1); 
+				costAcc += Cost(prediction, x.Item2);
 			}
 				
 			return costAcc / (double)setSize;
@@ -35,7 +36,7 @@ namespace Nanon.Learning.Tools
 		
 		public static double Cost(Vector prediction, Vector output)
 		{
-			return (prediction - output).EuclideanNorm;
+			return (output - prediction).EuclideanNorm;
 		}
 	}
 }

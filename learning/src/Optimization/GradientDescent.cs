@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Diagnostics;
 
 using Nanon.Math.Linear;
 using Nanon.Math.Series;
@@ -21,35 +22,6 @@ namespace Nanon.Learning.Optimization
 		int initialStepSize = 1;
 		double learningRate = 1;
 		bool showInfo = true;
-		double momentum = 0.5d;
-
-		public int IterationCount {
-			get {
-				return this.iterationCount;
-			}
-			set {
-				iterationCount = value;
-			}
-		}
-		
-		public double Momentum {
-			get {
-				return this.momentum;
-			}
-			set {
-				momentum = value;
-			}
-		}	
-		
-		public int InitialStepSize {
-			get {
-				return this.initialStepSize;
-			}
-			set {
-				initialStepSize = value;
-			}
-		}
-
 	
 		//  learningProgression series should ever divergent!
 		Func<int, double> learningProgression =  Series.HarmonicSeries;
@@ -73,89 +45,53 @@ namespace Nanon.Learning.Optimization
 				showInfo = value;
 			}
 		}
-				
-		double GradSumm(Vector[] gradients)
-		{
-			var acc = 0.0d;
-			foreach(var gradient in gradients)
-				acc += gradient.ToVector.Map(System.Math.Abs).Mean;
-			
-			return acc;
-		}
 		
-		void Update(IHypothesis<InputT, OutputT> hypothesis, Vector[] grads, Vector[] prevGrad, double coeff)
-		{
-			var layerNum = 1;
-			// correct hypothesis
-			for (var j = 0; j < grads.Length; ++j)
-			{
-				var gradient = grads[j].Cells;
-				var prevGradient = prevGrad[j].Cells;
-				
-				var finalFactor = coeff * (1.0d / (double)layerNum);
-				for (int i = 0; i < gradient.Length; ++i)
-					gradient[i] = finalFactor * gradient[i] + momentum * prevGradient[i];
-				
-				//++layerNum;
+		public int IterationCount {
+			get {
+				return this.iterationCount;
 			}
-			
-			hypothesis.Correct(grads);
+			set {
+				iterationCount = value;
+			}
 		}
 		
-		double DoGradientStep(IHypothesis<InputT, OutputT> hypothesis, IEnumerable<Tuple<InputT, OutputT> > exsamples, double coeff, int stepSize)
+		public int InitialStepSize {
+			get {
+				return this.initialStepSize;
+			}
+			set {
+				initialStepSize = value;
+			}
+		}
+		
+		void DoGradientStep(IHypothesis<InputT, OutputT> hypothesis, IEnumerable<Tuple<InputT, OutputT> > exsamples, double coeff, int stepSize)
 		{
 			var inputCount   = exsamples.Count();
 			
 			//  prevent to passing a small inputs away without weigths have been changed
 			var boundedStepSize = System.Math.Min(stepSize, inputCount);
 				
-			var predAcc   = hypothesis.ZeroGradient;
-			var gradAcc   = hypothesis.ZeroGradient;
-			var gradCount = gradAcc.Length;
-			
-			var i = 0;
 			var batchSize = 0;
 			
 			foreach(var ex in exsamples)
 			{
-				var currGrad = hypothesis.Gradient(ex.Item1, ex.Item2);
+				hypothesis.Gradient(ex.Item1, ex.Item2);
 				
-				// gather gradient to the accumulator
-				for (var gradientIndex = 0; gradientIndex < gradCount; ++gradientIndex)
-				  gradAcc[gradientIndex].Add(currGrad[gradientIndex], gradAcc[gradientIndex]);
 				++batchSize;
 				
-				// gradient step - correct hypothesis 
-				var isLastSample   = i == (inputCount - 1);
-				var batchIsFull    = batchSize == boundedStepSize;
-				var isTimeToUpdate = batchIsFull || isLastSample;
-				
-				if (isTimeToUpdate)
+				if (batchSize == boundedStepSize)
 				{
-					//  calculate invert avg multiplier
 					var factor  = (coeff / (double)batchSize) * learningRate;
-					
-					Update(hypothesis, gradAcc, predAcc, factor);
-					
-					if (!isLastSample)
-					{						
-						// swap accs
-						var tmpAcc = gradAcc;
-						gradAcc = predAcc;
-						predAcc = tmpAcc;
-						
-						// reset accumulators
-						foreach(var grad in gradAcc)
-							grad.SetToZero();
-						
-						batchSize = 0;
-					}
+					hypothesis.Correct(factor);
+					batchSize = 0;
 				}
-				++i;
 			}
 			
-			//  diagnostic info
-			return GradSumm(gradAcc);
+			if (batchSize != 0)
+			{
+				var factor  = (coeff / (double)batchSize) * learningRate;
+				hypothesis.Correct(factor);
+			}
 		}
 		
 		public void Optimize(IHypothesis<InputT, OutputT> hypothesis, IEnumerable<Tuple<InputT, OutputT> > exsamples)
@@ -164,28 +100,22 @@ namespace Nanon.Learning.Optimization
 				return;
 			
 			var stepSize = initialStepSize;
-			var cost = 0;//Cost(hypothesis, exsamples);
-				
-			if (showInfo)
-			{
-				Console.WriteLine("initial cost   : {0}", cost);
-			}
+			var watcher = new Stopwatch();
+			watcher.Start();
 			
 			for (var iteration = 1; iteration <= iterationCount; ++iteration)
 			{
-				var coeff =  learningProgression(iteration);
-				var lastGradSum = DoGradientStep(hypothesis, exsamples, coeff, stepSize);
-				var newCost = 0;//Cost(hypothesis, exsamples);
+
 				
-				if (showInfo)
-				{
-					Console.WriteLine("obtain new cost : {0} last grad sum : {1}", newCost, lastGradSum);
-					if (newCost > cost)
-						Console.WriteLine("Warning: probably weights will divergent!");
-				}
-				cost = newCost;
+				var coeff =  learningProgression(iteration);
+				DoGradientStep(hypothesis, exsamples, coeff, stepSize);
+				
+				
 				stepSize *= 2;
 			}
+			
+			watcher.Stop();
+			Console.WriteLine(watcher.ElapsedMilliseconds);
 		}
 	}
 }

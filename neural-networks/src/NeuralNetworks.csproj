@@ -45,7 +45,6 @@
     <Compile Include="NetworkBuilder.cs" />
     <Compile Include="NeuralNetwork.cs" />
     <Compile Include="Layer\LayerBuilder.cs" />
-    <Compile Include="Layer\ConvolutionalLayer.cs" />
     <Compile Include="GraphBased\Neuron.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

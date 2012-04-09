@@ -9,16 +9,13 @@ namespace Nanon.Model
 	// which can become a trained regression or not (in worst case)
 	//
 	public interface IHypothesis<InputT, OutputT> : IRegression<InputT, OutputT>
-	{
-		// to recreate internal gradient structure
-		Vector[] ZeroGradient { get; } 
-		
+	{		
 		// find gradient of cost(loss) function
 		// should get gradients for current "input, output"
-		Vector[] Gradient(InputT input, OutputT output);
+		void Gradient(InputT input, OutputT output);
 		
 		// correct hypothesis by gradient
-		void Correct(Vector[] gradient);
+		void Correct(double coeff);
 	}
 }
 

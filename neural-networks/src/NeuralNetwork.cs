@@ -35,12 +35,11 @@ namespace Nanon.NeuralNetworks
 			var prediction = layers.FeedForward(input);
 			var error      = output - prediction;
 			layers.Backprop(input, error);
-			layers.Gradient().ToArray();
 		}
 
 		public void Correct (double coeff)
 		{
-			//layers.Correct(ConsList<Vector>.FromArray(gradient));
+			layers.Correct(coeff);
 		}
 		
 		#endregion
