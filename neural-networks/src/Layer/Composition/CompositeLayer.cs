@@ -27,6 +27,12 @@ namespace Nanon.NeuralNetworks.Layer.Composition
 			return new CompositeLayer<A, B, C>(fst, Singleton<B, C>(snd));
 		}
 		
+		public static ICompositeLayer<A, D> Compose3<A, B, C, D>(ISingleLayer<A, B> fst, ISingleLayer<B, C> snd, ISingleLayer<C, D> trd)
+		{
+			var tail = Compose2<B, C, D>(snd, trd);
+			return new CompositeLayer<A, B, D>(fst, tail);
+		}
+		
 		#region ICompositeLayer[InputT,OutputT] implementation
 		
 		public OutputT FeedForward(InputT input)
@@ -52,7 +58,7 @@ namespace Nanon.NeuralNetworks.Layer.Composition
 		public void Correct(double coeff)
 		{
 			first.Correct(coeff);
-			second.Correct(coeff);
+			second.Correct(0.0d);
 		}
 		
 		#endregion

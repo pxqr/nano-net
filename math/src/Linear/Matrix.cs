@@ -21,10 +21,13 @@ namespace Nanon.Math.Linear
 			height = h;
 		}
 		
+		static int randomSeed = 0;
+		
 		public static Matrix RandomUnform(int w, int h, double range)
 		{
+
 			var res  = new Matrix(w, h);
-			var rand = new System.Random(w * h);
+			var rand = new System.Random(0);
 			
 			res.Transform(dummy => 2 * range * rand.NextDouble());
 			
@@ -366,9 +369,9 @@ namespace Nanon.Math.Linear
 		public static void MultiplyWithTrasposedWithBiasAdd(Vector lhs, Vector rhs, Matrix res)
 		{
 			var sizeL = lhs.Size;
-			var sizeR = rhs.Size + 1;
+			var sizeR = rhs.Size;
 			
-			if (res.height != sizeL || res.width != sizeR)
+			if (res.height != sizeL || res.width != sizeR + 1)
 				throw new ArgumentException("Incorrect sizes.");
 			    
 			var lhsCells = lhs.Cells;
@@ -376,14 +379,18 @@ namespace Nanon.Math.Linear
 				
 			var resCells = res.cells;
 			
+			var a = 0;
+			if (rhs.Size >= 500)
+				a = 1;
+			
 			for (var j = 0; j < sizeL; ++j)
 			{
-				var offset = j * sizeR;
+				var offset = j * (sizeR + 1);
 				var left   = lhsCells[j];
 				
 				resCells[offset++] += left;
 				
-				for (var i = 0; i < sizeR - 1; ++i)
+				for (var i = 0; i < sizeR; ++i)
 			      resCells[i + offset] += left * rhsCells[i];
 			}
 		}

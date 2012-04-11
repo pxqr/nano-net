@@ -1,21 +1,16 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="../math/src/Activator/Activator.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="../neural-networks/src/Convolutional/VectorConvolutor.cs">
     <Files>
-      <File FileName="Main.cs" Line="9" Column="25" />
-      <File FileName="../learning/src/Optimization/GradientDescent.cs" Line="81" Column="7" />
-      <File FileName="../neural-networks/src/Layer/FullyConnectedLayer.cs" Line="19" Column="74" />
-      <File FileName="../neural-networks/src/NeuralNetwork.cs" Line="1" Column="1" />
-      <File FileName="../neural-networks/src/NetworkBuilder.cs" Line="55" Column="13" />
-      <File FileName="../math/src/Activator/Activator.cs" Line="10" Column="36" />
+      <File FileName="Main.cs" Line="84" Column="76" />
+      <File FileName="MergerSplitterTest.cs" Line="115" Column="11" />
+      <File FileName="../neural-networks/src/Convolutional/VectorConvolutor.cs" Line="75" Column="4" />
+      <File FileName="../math/src/Linear/Matrix.cs" Line="37" Column="15" />
+      <File FileName="../math/src/Linear/Vector.cs" Line="442" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
-        <State expanded="True" selected="True">
-          <Node name="Base" expanded="True">
-            <Node name="Data" expanded="True" />
-            <Node name="Model" expanded="True" />
-          </Node>
+        <State expanded="True">
           <Node name="Learning" expanded="True">
             <Node name="Optimization" expanded="True" />
             <Node name="Tools" expanded="True" />
@@ -23,18 +18,16 @@
           <Node name="Math" expanded="True">
             <Node name="Activator" expanded="True" />
             <Node name="Linear" expanded="True" />
-            <Node name="Series" expanded="True" />
           </Node>
           <Node name="nanon" expanded="True" />
           <Node name="NeuralNetworks" expanded="True">
-            <Node name="Convolutional" expanded="True" />
+            <Node name="Convolutional" expanded="True">
+              <Node name="VectorConvolutor.cs" selected="True" />
+            </Node>
+            <Node name="GraphBased" expanded="True" />
             <Node name="Layer" expanded="True">
               <Node name="Composition" expanded="True" />
             </Node>
-          </Node>
-          <Node name="Statistics" expanded="True">
-            <Node name="Linear" expanded="True" />
-            <Node name="Logistic" expanded="True" />
           </Node>
         </State>
       </Pad>
@@ -43,7 +36,7 @@
       </Pad>
       <Pad Id="MonoDevelop.Debugger.WatchPad">
         <State>
-          <Value>numgrad</Value>
+          <Value>gradients</Value>
           <Value>modelgrad</Value>
           <Value>diff</Value>
         </State>
@@ -53,23 +46,11 @@
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
-  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
-  <MonoDevelop.Ide.ItemProperties.nanon>
-    <MonoDevelop.Ide.CustomExecutionModes>
-      <Data Name="Default (Custom)" Id="9ddb8817-9742-471d-9d04-d39f5b12f068" ModeId="Default" PromptForParameters="True">
-        <CommandData>
-          <Item Key="MonoDevelop.Ide.Execution.CustomArgsCustomizer">
-            <Value Arguments="/home/redner/projects/nanon/data/test-images.data /home/redner/projects/nanon/data/test-labels.data" ctype="CustomArgsExecutionModeData">
-              <EnvironmentVariables />
-            </Value>
-          </Item>
-          <Item Key="MonoDevelop.Ide.Execution.MonoExecutionCustomizer">
-            <Value ctype="MonoExecutionParameters" />
-          </Item>
-        </CommandData>
-      </Data>
-    </MonoDevelop.Ide.CustomExecutionModes>
-  </MonoDevelop.Ide.ItemProperties.nanon>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches>
+    <Watch file="../learning/src/Tools/RegressionTester.cs" line="38" offsetX="500" offsetY="592" expression="prediction" liveUpdate="False" />
+    <Watch file="../neural-networks/src/Convolutional/VectorConvolutor.cs" line="54" offsetX="388" offsetY="848" expression="weights" liveUpdate="False" />
+    <Watch file="../neural-networks/src/Layer/FullyConnectedLayer.cs" line="96" offsetX="564" offsetY="1392" expression="outputError" liveUpdate="False" />
+  </MonoDevelop.Ide.DebuggingService.PinnedWatches>
   <MonoDevelop.Ide.ItemProperties.Converter>
     <MonoDevelop.Ide.CustomExecutionModes>
       <Data Name="Default (Custom)" Id="92820823-239e-429c-b43c-2ced3ed8ea85" ModeId="Default">
@@ -86,4 +67,20 @@
       </Data>
     </MonoDevelop.Ide.CustomExecutionModes>
   </MonoDevelop.Ide.ItemProperties.Converter>
+  <MonoDevelop.Ide.ItemProperties.nanon>
+    <MonoDevelop.Ide.CustomExecutionModes>
+      <Data Name="Default (Custom)" Id="9ddb8817-9742-471d-9d04-d39f5b12f068" ModeId="Default" PromptForParameters="True">
+        <CommandData>
+          <Item Key="MonoDevelop.Ide.Execution.CustomArgsCustomizer">
+            <Value Arguments="/home/redner/projects/nanon/data/test-images.data /home/redner/projects/nanon/data/test-labels.data" ctype="CustomArgsExecutionModeData">
+              <EnvironmentVariables />
+            </Value>
+          </Item>
+          <Item Key="MonoDevelop.Ide.Execution.MonoExecutionCustomizer">
+            <Value ctype="MonoExecutionParameters" />
+          </Item>
+        </CommandData>
+      </Data>
+    </MonoDevelop.Ide.CustomExecutionModes>
+  </MonoDevelop.Ide.ItemProperties.nanon>
 </Properties>

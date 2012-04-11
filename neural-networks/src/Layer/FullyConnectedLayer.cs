@@ -14,15 +14,16 @@ namespace Nanon.NeuralNetworks.Layer
 		// "cache"
 		Vector signals;
 		Vector outputs;  
-		Matrix gradient;
+		Matrix gradients;
 		Vector predError;
+		double inputFactor;
 		
 		public static IActivator defaultActivator = new Nanon.Math.Activator.Tanh();
 		
 		public FullyConnectedLayer(int inputSize, int outputSize, IActivator activationFunction)
 		{
 			// "(+ 1)" because of bias term
-			var eps =  OptimalInitEpsilon(inputSize + 1, outputSize);
+			var eps = OptimalInitEpsilon(inputSize + 1, outputSize);
 			weights = Matrix.RandomUnform(inputSize + 1, outputSize, eps);
 			
 			outputs = new Vector(outputSize);
@@ -31,7 +32,8 @@ namespace Nanon.NeuralNetworks.Layer
 			
 			activator = activationFunction;
 			
-			gradient = new Matrix(inputSize + 1, outputSize);
+			inputFactor = System.Math.Sqrt(inputSize + 1);
+			gradients = new Matrix(inputSize + 1, outputSize);
 		}		
 		
 		static double OptimalInitEpsilon(int inputSize, int outputSize)
@@ -93,7 +95,7 @@ namespace Nanon.NeuralNetworks.Layer
 		
 		public void Gradient(Vector input, Vector outputError)
 		{
-			Matrix.MultiplyWithTrasposedWithBiasAdd(outputError, input, gradient);
+			Matrix.MultiplyWithTrasposedWithBiasAdd(outputError, input, gradients);
 			//var tmp = gradient.ZeroCopy();
 			//Matrix.MultiplyWithTrasposed(outputError, Vector.Prepend(input), tmp);
 			//gradient = gradient + tmp;
@@ -101,20 +103,22 @@ namespace Nanon.NeuralNetworks.Layer
 		
 		public void Correct(double coeff)
 		{    
-			var grads = gradient.Cells;
-			var weigs = weights.Cells;
-			var size  = grads.Length;
-			
-			for (var i = 0; i < size; ++i)
-			{
-				weigs[i] -= grads[i] * coeff;
-				grads[i] = 0.0d;	
-			}
-			
-			// weights -= gradients * coeff;
-			// gradient.SetToZero();
+		   // weights -= coeff * gradients;
+			gradients.SetToZero();
 		}
 		
 		#endregion
+
+		public Matrix Weights {
+			get {
+				return this.weights;
+			}
+		}
+
+		public Matrix Gradients {
+			get {
+				return this.gradients;
+			}
+		}
 	}
 }

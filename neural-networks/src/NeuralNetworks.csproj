@@ -50,6 +50,8 @@
     <Compile Include="Layer\Composition\Merger.cs" />
     <Compile Include="Layer\Composition\VectorMerger.cs" />
     <Compile Include="Convolutional\VectorSubsampler.cs" />
+    <Compile Include="Convolutional\VectorConvolutor.cs" />
+    <Compile Include="Convolutional\MatrixConvolutor.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

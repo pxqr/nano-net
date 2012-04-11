@@ -51,6 +51,7 @@
     <Compile Include="Series\Series.cs" />
     <Compile Include="Linear\Normalization.cs" />
     <Compile Include="Activator\Activator.cs" />
+    <Compile Include="Linear\IFaces.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

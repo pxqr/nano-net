@@ -33,7 +33,7 @@ namespace Nanon.NeuralNetworks
 		public void Gradient (InputT input, Vector output)
 		{
 			var prediction = layers.FeedForward(input);
-			var error      = output - prediction;
+			var error      = prediction - output;
 			layers.Backprop(input, error);
 		}
 

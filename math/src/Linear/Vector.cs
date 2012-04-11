@@ -26,6 +26,11 @@ namespace Nanon.Math.Linear
 			cells = comp;
 		}
 		
+		public static Vector RandomUniform(int size, double range)
+		{
+			return Matrix.RandomUnform(size, 1, range).ToVector;
+		}
+		
 		public Vector ToVector
 		{
 			get
@@ -229,15 +234,25 @@ namespace Nanon.Math.Linear
 				resCells[i] = rhsCells[i] + lhsCells[i];
 		}
 		
-		public void Sub(Vector lhs, Vector res)
+		public void Add(double lhs, Vector res)
 		{
-			var size = lhs.Size;
+			var size = Size;
 			var resCells = res.cells;
-			var lhsCells = this.cells;
-			var rhsCells = lhs.cells;
+			var rhsCells = this.cells;
 			
 			for (var i = 0; i < size; ++i)
-				resCells[i] = rhsCells[i] - lhsCells[i];
+				resCells[i] = lhs + rhsCells[i];
+		}
+		
+		public void Sub(Vector rhs, Vector res)
+		{
+			var size = Size;
+			var resCells = res.cells;
+			var lhsCells = this.cells;
+			var rhsCells = rhs.cells;
+			
+			for (var i = 0; i < size; ++i)
+				resCells[i] = lhsCells[i] - rhsCells[i];
 		}
 		
 		//////////////////////////////////////////////////////////////////////////////
@@ -390,6 +405,70 @@ namespace Nanon.Math.Linear
 			{
 				cells[i] = value;	
 			}
+		}
+		
+		public void DownsampleBy2(Vector res)
+		{
+			if (Size != res.Size * 2)
+				throw new ArgumentException("Incorrect sizes!");
+			
+			var size = res.Size;
+			for (var i = 0; i < size; ++i)
+				res.cells[i] = 0.5d * (cells[2 * i] + cells[(2 * i) + 1]);
+		}
+		
+		public void UpsampleBy2(Vector res)
+		{
+			if (res.Size != Size * 2)
+				throw new ArgumentException("Incorrect sizes!");
+			
+			var size = Size;
+			for (var i = 0; i < size; ++i)
+			{
+				res.cells[2 * i]     = cells[i];
+				res.cells[2 * i + 1] = cells[i];
+			}
+		}
+		
+		public void Convolve(Vector kernel, Vector result)
+		{
+			var inputSize = Size;
+			var kernelSize = kernel.Size;
+			var inputCells = this.cells;
+			var kernelCells = kernel.cells;
+			var resultCells = result.cells;
+			
+			if (result.Size != (inputSize - kernelSize + 1))
+				throw new ArgumentException("Incorrect sizes!");
+			
+			for (var j = 0; j < (inputSize - kernelSize + 1); ++j)
+			{
+				double acc = 0.0d;
+				
+				for (var i = 0; i < kernelSize; ++i)
+					acc += kernelCells[i] * inputCells[j + i];
+				
+				resultCells[j] = acc;
+			}		
+		}
+		
+		public void Involve(Vector error, Vector result)
+		{
+			var inputSize = Size;
+			var inputCells = cells;
+			var errorSize  = error.Size;
+			var errorCells = error.cells;
+			var resultCells = result.cells;
+			var resultSize  = result.Size;
+			
+			if (errorSize != (inputSize - resultSize + 1))
+				throw new ArgumentException("Incorrect sizes!");
+			
+			for (var j = 0; j < (inputSize - resultSize + 1); ++j)
+			{
+				for (var i = 0; i < resultSize; ++i)
+					resultCells[i] += errorCells[j]* inputCells[i + j];
+			}		
 		}
 	}
 }
