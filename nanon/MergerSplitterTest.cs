@@ -26,7 +26,7 @@ namespace Nanon.Test
 			for (var i = 0; i < count; ++i)
 				b[i] = new FullyConnectedLayer(hidden, dataSet.FirstOutput.Size / count, new Tanh());
 			
-			var splitter = new Splitter<Vector, Vector>(a);
+			var splitter = new Splitter<Vector,Vector>(a);
 			var merger   = new VectorMerger<Vector>(b);
 			
 			

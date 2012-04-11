@@ -4,9 +4,9 @@ using Nanon.Math.Linear;
 
 namespace Nanon.NeuralNetworks.Layer.Composition
 {
-	public class VectorMerger<InputT> : ISingleLayer<InputT[], Vector> 
+	public class MatrixMerger<InputT> : ISingleLayer<InputT[], Vector> 
 	{
-		ISingleLayer<InputT, Vector>[] layers;
+		ISingleLayer<InputT, Matrix>[] layers;
 		
 		int size;       // layer count
 		int outputSize; // size of output of each layer
@@ -15,7 +15,7 @@ namespace Nanon.NeuralNetworks.Layer.Composition
 		Vector signals;
 		InputT[] predErrors;
 		
-		public VectorMerger(ISingleLayer<InputT, Vector>[] parLayers)
+		public MatrixMerger(ISingleLayer<InputT, Matrix>[] parLayers)
 		{
 			size = parLayers.Length;
 			
@@ -55,7 +55,7 @@ namespace Nanon.NeuralNetworks.Layer.Composition
 			{
 				var iFrom = i * outputSize;
 				var iTo   = iFrom + outputSize;
-				var unwindedError = error.Cut(iFrom, iTo);
+				var unwindedError = new Matrix(outputSize, 1, error.Cut(iFrom, iTo).Cells);
 				
 				predErrors[i] = layers[i].PropagateBackward(input[i], predSignal[i], unwindedError);
 			}
@@ -69,7 +69,7 @@ namespace Nanon.NeuralNetworks.Layer.Composition
 				// cut 
 				var iFrom = i * outputSize;
 				var iTo   = iFrom + outputSize;
-				var unwindedError = outputError.Cut(iFrom, iTo);
+				var unwindedError = new Matrix(outputSize, 1, outputError.Cut(iFrom, iTo).Cells);
 
 				layers[i].Gradient(input[i], unwindedError);
 			}
