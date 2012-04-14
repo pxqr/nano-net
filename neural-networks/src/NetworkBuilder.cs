@@ -49,17 +49,32 @@ namespace Nanon.NeuralNetworks
 			
 			var a = new ISingleLayer<Matrix, Matrix>[count];
 			for (var i = 0; i < count; ++i)
-				a[i] = new MatrixConvolutor(dataSet.FirstInput.Width, dataSet.FirstInput.Height, 2, 2, new Tanh());
+				a[i] = new MatrixConvolutor(28, 28, 20, 20, new Tanh());
 			
 			var b = new ISingleLayer<Matrix, Matrix>[count];
 			for (var i = 0; i < count; ++i)
-				b[i] = new MatrixSubsampler(2, 2, 1, 1, new Tanh());
+				b[i] = new MatrixSubsampler(20, 20, 10, 10, new Tanh());
+			
+			var c = new ISingleLayer<Matrix, Matrix>[count];
+			for (var i = 0; i < count; ++i)
+				c[i] = new MatrixConvolutor(10, 10, 2, 2, new Tanh());
+			
+			var d = new ISingleLayer<Matrix, Matrix>[count];
+			for (var i = 0; i < count; ++i)
+				d[i] = new MatrixSubsampler(2, 2, 1, 1, new Tanh());
+			
 			
 			var splitter = new Splitter<Matrix, Matrix>(a);
-			var merger   = new MatrixMerger<Matrix>(b);
+			var applicator1 = new Applicator<Matrix, Matrix>(b);
+			var applicator2 = new Applicator<Matrix, Matrix>(c);
+			var merger   = new MatrixMerger<Matrix>(d);
+			
 			var classif  = new FullyConnectedLayer(1 * count, 10, new Tanh());
 			
-			var comp = CompositeLayer<Vector, Vector[], Vector>.Compose(splitter, merger
+			var comp = CompositeLayer<Vector, Vector[], Vector>.Compose(splitter, 
+			                                                            applicator1, 
+			                                                            applicator2,
+			                                                            merger
 			//                                                             , classif
 			                                                             );
 			

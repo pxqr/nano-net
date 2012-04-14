@@ -11,6 +11,7 @@ namespace Nanon.Math.Linear
 		double Sum { get; }
 		
 		void Convolve(T kernel, T res);
+		void Deconvolve(T kernel, T res);
 		void Involve(T outputs, T kernel);
 		
 		void DownsampleBy2(T res);

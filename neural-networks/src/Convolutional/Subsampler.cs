@@ -71,10 +71,10 @@ namespace Nanon.NeuralNetworks.Layer.Convolutional
 
 		public override void Correct (double coeff)
 		{
-			//weight -= coeff * gradient;
+			weight -= coeff * gradient;
 			gradient = 0;
 			
-			//bias   -= coeff * biasGradient;
+			bias   -= coeff * biasGradient;
 			biasGradient = 0;
 		}
 		

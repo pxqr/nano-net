@@ -53,6 +53,7 @@
     <Compile Include="Layer\SingleLayer.cs" />
     <Compile Include="Convolutional\Convolutor.cs" />
     <Compile Include="Convolutional\Subsampler.cs" />
+    <Compile Include="Layer\Composition\Applicator.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

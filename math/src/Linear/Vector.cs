@@ -395,6 +395,11 @@ namespace Nanon.Math.Linear
 				resultCells[j] = acc;
 			}		
 		}
+		
+		public void Deconvolve(Vector kernel, Vector res)
+		{
+			throw new NotImplementedException();	
+		}
 
 		public void Involve(Vector error, Vector result)
 		{

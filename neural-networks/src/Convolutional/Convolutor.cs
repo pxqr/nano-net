@@ -33,7 +33,12 @@ namespace Nanon.NeuralNetworks.Layer.Convolutional
 
 		public override T PropagateBackward (T input, T error)
 		{
-			throw new NotImplementedException ();
+			var deriv = input.Copy();
+			deriv.Transform(activator.Activate, deriv);
+			
+			error.Deconvolve(weights, predError);
+			predError.Mul(deriv, predError);
+			return predError;
 		}
 
 		public override void Gradient (T inputs, T outputError)
@@ -45,7 +50,7 @@ namespace Nanon.NeuralNetworks.Layer.Convolutional
 		public override void Correct(double coeff)
 		{
 			gradients.Mul(coeff, gradients);
-			weights.Add(gradients, weights);
+			weights.Sub(gradients, weights);
 			gradients.SetToZero();
 			
 			bias -= coeff * biasGradient;

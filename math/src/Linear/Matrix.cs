@@ -335,18 +335,23 @@ namespace Nanon.Math.Linear
 				{
 					var acc = 0.0d;
 				
-			    	for (var j = row; j < row + kernelHeight; ++j)
+			    	for (var j = 0; j < kernelHeight; ++j)
 					{
-						var inputOffset  = col + j * inputWidth;
-						var kernelOffset = (j - row) * kernelWidth; 
+						var inputOffset  = col + (row + j) * inputWidth;
+						var kernelOffset = j * kernelWidth; 
 					                
 			     		for (var i = 0; i < kernelWidth; ++i)
-							acc += inputCells[inputOffset++] * kernelCells[kernelOffset++];
+							acc += inputCells[inputOffset + i] * kernelCells[kernelOffset + i];
 					}
 							
 				    var resIndex = col + row * outputWidth;
 					resCells[resIndex] = acc;
 				}
+		}
+		
+		public void Deconvolve(Matrix kernel, Matrix res)
+		{
+			//for 
 		}
 
 		public void Involve(Matrix err, Matrix kernel)
@@ -368,11 +373,10 @@ namespace Nanon.Math.Linear
 					{
 						var inputOffset  = col + (j + row) * inputWidth;
 						var errorIndex   = col + row  * err.width; 
-					    var kernelOffset = j * kernel.width;
+					    var kernelOffset = j * kernelWidth;
 					
 			     		for (var i = 0; i < kernelWidth; ++i)
-
-						kernelCells[kernelOffset++] += inputCells[inputOffset++] * errCells[errorIndex];
+							kernelCells[kernelOffset + i] += inputCells[inputOffset + i] * errCells[errorIndex];
 					}
 				}
 		}
