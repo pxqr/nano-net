@@ -27,7 +27,7 @@ namespace Nanon.Math.Linear
 		{
 
 			var res  = new Matrix(w, h);
-			var rand = new System.Random(0);
+			var rand = new System.Random(randomSeed++);
 			
 			res.Transform(dummy => 2 * range * rand.NextDouble());
 			
@@ -194,124 +194,6 @@ namespace Nanon.Math.Linear
 			return dot;
 		}
 		
-		public static Matrix operator -(Matrix lhs, Matrix rhs)
-		{
-			if (lhs.Size != rhs.Size)
-				throw new Exception("Cant substract inequal vectors or matrices.");
-			
-			var size = lhs.Size;
-			var sub  = lhs.ZeroCopy();
-			
-			for (var i = 0; i < size; ++i)
-				sub.cells[i] = lhs.cells[i] - rhs.cells[i];
-			
-			return sub;
-		}
-		
-		public static Matrix operator +(Matrix lhs, Matrix rhs)
-		{
-			if (lhs.Size != rhs.Size)
-				throw new Exception("Cant add inequal vectors or matrices.");
-			
-			var size = lhs.Size;
-			var adds = lhs.ZeroCopy();
-			
-			for (var i = 0; i < size; ++i)
-				adds.cells[i] = lhs.cells[i] + rhs.cells[i];
-			
-			return adds;
-		}
-		
-		public static Matrix operator -(double lhs, Matrix rhs)
-		{
-			var size = rhs.Size;
-			var sub  = rhs.ZeroCopy();
-			
-			for (var i = 0; i < size; ++i)
-				sub.cells[i] = lhs - rhs.cells[i];
-			
-			return sub;
-		}
-		
-		public static Matrix operator -(Matrix lhs, double rhs)
-		{
-			var size = lhs.Size;
-			var sub  = lhs.ZeroCopy();
-			
-			for (var i = 0; i < size; ++i)
-				sub.cells[i] = lhs.cells[i] - rhs;
-			
-			return sub;
-		}
-		
-		public static Matrix operator +(double lhs, Matrix rhs)
-		{
-			var size = rhs.Size;
-			var adds = rhs.ZeroCopy();
-			
-			for (var i = 0; i < size; ++i)
-				adds.cells[i] = lhs + rhs.cells[i];
-			
-			return adds;
-		}
-		
-		public static Matrix operator *(double lhs, Matrix rhs)
-		{
-			var size = rhs.Size;
-			var adds = rhs.ZeroCopy();
-			
-			for (var i = 0; i < size; ++i)
-				adds.cells[i] = lhs * rhs.cells[i];
-			
-			return adds;
-		}
-		
-		// Matrix(m x n) -> Vector(n x 1) -> Vector(m x 1)
-		public static void MultiplyVertical(Matrix lhs, Vector rhs, Vector res)
-		{
-			var vector = rhs.Cells;
-			var matrix = lhs.Cells;
-			var width  = lhs.Width;
-			var height = lhs.Height;
-			
-			for(var rowIndex = 0; rowIndex < height; ++rowIndex)
-			{
-				var rowOffset = rowIndex * width;
-				double acc = 0.0d;
-				
-				for(var i = 0; i < width; ++i)
-				{
-					acc += matrix[rowOffset + i] * vector[i];
-				}
-				
-				res.Cells[rowIndex] = acc;
-			}
-		}
-		
-		//   a = 1    b = 3 4   res = 1 * 3  1 * 4 
-		//       2                    2 * 3  2 * 4
-		public static void MultiplyWithTrasposed(Vector lhs, Vector rhs, Matrix res)
-		{
-			var sizeL = lhs.Size;
-			var sizeR = rhs.Size;
-			
-			if (res.height != sizeL || res.width != sizeR)
-				throw new ArgumentException("Incorrect sizes.");
-			    
-			var lhsCells = lhs.Cells;
-			var rhsCells = rhs.Cells;
-				
-			var resCells = res.cells;
-			
-			for (var j = 0; j < sizeL; ++j)
-			{
-				var offset = j * sizeR;
-				var left   = lhsCells[j];
-				for (var i = 0; i < sizeR; ++i)
-			      resCells[i + offset] = left * rhsCells[i];
-			}
-		}
-		
 		public static void MultiplyWithTrasposedWithBiasAdd(Vector lhs, Vector rhs, Matrix res)
 		{
 			var sizeL = lhs.Size;
@@ -364,30 +246,6 @@ namespace Nanon.Math.Linear
 			}
 		}
 		
-		// Vector(1 x m) -> Matrix(m x n) -> Vector(1 x n)
-		public static void MultiplyHorizontal(Vector lhs, Matrix rhs, Vector res)
-		{
-			if (lhs.Size != rhs.Height || rhs.Width != res.Size)
-				throw new ArgumentException("Incorrect size!");
-			
-			var vector = lhs.Cells;
-			var matrix = rhs.Cells;
-			var width  = rhs.Width;
-			var height = rhs.Height;
-			
-			for(var colIndex = 0; colIndex < width; ++colIndex)
-			{
-				double acc = 0.0d;
-				
-				for(var rowIndex = 0; rowIndex < height; ++rowIndex)
-				{
-					acc += matrix[colIndex + rowIndex * height] * vector[rowIndex];
-				}
-				
-				res.Cells[colIndex] = acc;
-			}
-		}
-		
 		// Vector(1 x m) -> Matrix(m x n) -> Vector(1 x n - 1)
 		public static void MultiplyHorizontalWithoutBias(Vector lhs, Matrix rhs, Vector res)
 		{
@@ -399,16 +257,16 @@ namespace Nanon.Math.Linear
 			var width  = rhs.Width;
 			var height = rhs.Height;
 			
-			for(var colIndex = 1; colIndex < width; ++colIndex)
+			for(var i = 1; i < width; ++i)
 			{
 				double acc = 0.0d;
-				
-				for(var rowIndex = 0; rowIndex < height; ++rowIndex)
+					
+				for(var j = 0; j < height; ++j)
 				{
-					acc += matrix[colIndex + rowIndex * height] * vector[rowIndex];
+					acc += matrix[i + j * width] * vector[j];
 				}
 				
-				res.Cells[colIndex - 1] = acc;
+				res.Cells[i - 1] = acc;
 			}
 		}
 		
@@ -435,6 +293,11 @@ namespace Nanon.Math.Linear
 			return new Matrix(width, height, new double[Size]);
 		}
 		
+		public Matrix Copy()
+		{
+			return new Matrix(width, height, ToVector.Copy().Cells);
+		}
+		
 		public double Sum
 		{
 			get
@@ -450,9 +313,6 @@ namespace Nanon.Math.Linear
 			if (even(kernel.width) || even(kernel.height))
 			    throw new ArgumentException("Kernel width and height should be odd!");
 			
-			var widthCutOff  = kernel.width / 2;
-			var heightCutOff = kernel.height / 2;
-			
 			var inputWidth   = width;
 			var inputHeight  = height;
 			
@@ -462,8 +322,9 @@ namespace Nanon.Math.Linear
 			var kernelWidth  = kernel.width;
 			var kernelHeight = kernel.height;
 			
-			// check sizes
-			/////////  here ///////		
+			if (inputWidth  != (outputWidth  + kernelWidth  - 1) || 
+			    inputHeight != (outputHeight + kernelHeight - 1))
+			    throw new ArgumentException("Incorrect sizes!");
 			
 			var resCells     = res.cells;
 			var inputCells   = cells;
@@ -477,7 +338,7 @@ namespace Nanon.Math.Linear
 			    	for (var j = row; j < row + kernelHeight; ++j)
 					{
 						var inputOffset  = col + j * inputWidth;
-						var kernelOffset = (j - row) * kernel.width; 
+						var kernelOffset = (j - row) * kernelWidth; 
 					                
 			     		for (var i = 0; i < kernelWidth; ++i)
 							acc += inputCells[inputOffset++] * kernelCells[kernelOffset++];

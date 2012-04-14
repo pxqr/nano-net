@@ -6,6 +6,7 @@ namespace Nanon.Math.Linear
 	{
 		Vector Unwind { get; }
 		T ZeroCopy();
+		T Copy();
 		
 		double Sum { get; }
 		

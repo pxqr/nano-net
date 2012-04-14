@@ -7,6 +7,8 @@ using Nanon.Model.Classifier;
 using Nanon.Learning.Optimization;
 using Nanon.NeuralNetworks;
 using Nanon.Math.Activator;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace Nanon.Test
 {
@@ -25,13 +27,15 @@ namespace Nanon.Test
 		
 		static DataSet<Vector, Vector> LoadDataSet(string trainImagesPath, string trainLabelsPath, string testImagesPath, string testLabelsPath)
 		{
-			var trainDataSet   = Load(trainImagesPath, trainLabelsPath).Take (2000);
-			testDataSet    = Load (testImagesPath, testLabelsPath).Take (2000);
+			var trainDataSet   = Load(trainImagesPath, trainLabelsPath).Take(1000);
+			GC.Collect();
+			testDataSet    = Load (testImagesPath, testLabelsPath).Take(1000);
+			GC.Collect();
 			
 			Console.WriteLine("Normalize data");
-			//var inputsNormalizator = new Normalization(trainDataSet.Inputs.ToArray());
-			//trainDataSet.TransformInputs(inputsNormalizator.Normalize);
-			//testDataSet.TransformInputs(inputsNormalizator.Normalize);
+			var inputsNormalizator = new Normalization(trainDataSet.Inputs.ToArray());
+			trainDataSet.TransformInputs(inputsNormalizator.Normalize);
+			testDataSet.TransformInputs(inputsNormalizator.Normalize);
 			
 			return trainDataSet;
 		}
@@ -59,13 +63,15 @@ namespace Nanon.Test
 		public static void Test(string trainImagesPath, string trainLabelsPath, string testImagesPath, string testLabelsPath)
 		{			
 			var dataSet   = LoadDataSet(trainImagesPath, trainLabelsPath, testImagesPath, testLabelsPath);
+			GC.Collect();
+			
 			var network   = NetworkBuilder.Create(dataSet
 			                , new Tanh()
-			                //, new List<int> { 20 }
+			                , new List<int> { 50 }
 							);
 			
 			var cost = Double.PositiveInfinity;
-			var optimizer = new GradientDescent<Vector, Vector>(10, 10, x => 1, 5, 
+			var optimizer = new GradientDescent<Vector, Vector>(5, 0.02, x => 1, 2, 
 			    x => { 
 					Console.Write("trainSet: ");
 					cost = Test(x, dataSet, cost);
@@ -81,7 +87,15 @@ namespace Nanon.Test
 			Console.WriteLine("Initial");
 			Test(network, dataSet);
 			Console.WriteLine("StartLearning");
-			trainer.Train(network, dataSet);
+			
+			for (var i = 0; i < 3; ++i)
+			{
+				Console.WriteLine("next generation");	
+				trainer.Train(network, dataSet);
+				optimizer.IterationCount += 1;
+				optimizer.InitialStepSize *= 2;
+			}
+			
 			Console.WriteLine("EndLearning");
 			Test(network, testDataSet);
 		}

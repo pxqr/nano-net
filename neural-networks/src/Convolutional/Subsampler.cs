@@ -18,9 +18,9 @@ namespace Nanon.NeuralNetworks.Layer.Convolutional
 		
 		internal Subsampler(IActivator activator): base(activator) 
 		{
-			weight   = 0.0d;
+			weight   = 0.1d;
 			gradient = 0.0d;
-			bias     = 0.0d;
+			bias     = 0.1d;
 			biasGradient = 0.0d;
 		}
 		
@@ -51,14 +51,14 @@ namespace Nanon.NeuralNetworks.Layer.Convolutional
 			return outputs;
 		}
 
-		public override T PropagateBackward (T input, T predSignal, T error)
+		public override T PropagateBackward (T input, T error)
 		{
-			var errors   = error.ZeroCopy();
-			errors.Mul(weight, errors);
+			var tmp   = error.Copy();
+			error.Mul(weight, tmp);
 			var upscaled = predError.ZeroCopy();
-			errors.UpsampleBy2(upscaled);
+			tmp.UpsampleBy2(upscaled);
 			
-			predSignal.Transform(activator.Derivative, predError);
+			input.Transform(activator.Derivative, predError);
 			predError.Mul(upscaled, predError);
 			return predError;
 		}
@@ -71,16 +71,14 @@ namespace Nanon.NeuralNetworks.Layer.Convolutional
 
 		public override void Correct (double coeff)
 		{
-			weight -= coeff * gradient;
+			//weight -= coeff * gradient;
 			gradient = 0;
 			
-			bias   -= coeff * biasGradient;
+			//bias   -= coeff * biasGradient;
 			biasGradient = 0;
 		}
 		
 		#endregion
-		
-		
 	}
 	
 	public class MatrixSubsampler : Subsampler<Matrix>

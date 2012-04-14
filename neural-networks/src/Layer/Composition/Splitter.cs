@@ -6,7 +6,6 @@ namespace Nanon.NeuralNetworks.Layer.Composition
 	{
 		ISingleLayer<InputT, OutputT>[] layers;
 		OutputT[] outputs;
-		OutputT[] signals;
 		int size;
 		
 		public Splitter (ISingleLayer<InputT, OutputT>[] parLayers)
@@ -14,7 +13,6 @@ namespace Nanon.NeuralNetworks.Layer.Composition
 			layers = parLayers;
 			size   = layers.Length;
 			outputs = new OutputT[size];
-			signals = new OutputT[size];
 		}
 
 		
@@ -25,12 +23,11 @@ namespace Nanon.NeuralNetworks.Layer.Composition
 			for (var i = 0; i < size; ++i)
 			{
 				outputs[i] = layers[i].FeedForward(input);
-				signals[i] = layers[i].Signal;
 			}
 			return outputs;
 		}
 
-		public InputT PropagateBackward (InputT input, InputT predSignal, OutputT[] error)
+		public InputT PropagateBackward (InputT input, OutputT[] error)
 		{
 			throw new NotImplementedException ();
 		}
@@ -45,12 +42,6 @@ namespace Nanon.NeuralNetworks.Layer.Composition
 		{
 			foreach(var layer in layers)
 				layer.Correct(coeff);
-		}
-
-		public OutputT[] Signal {
-			get {
-				return signals;
-			}
 		}
 
 		public OutputT[] Output {

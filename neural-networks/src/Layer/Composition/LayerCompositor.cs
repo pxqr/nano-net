@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 
 using Nanon.NeuralNetworks.Layer;
+using Nanon.Math.Linear;
 
 namespace Nanon.NeuralNetworks.Layer.Composition
 {
@@ -29,6 +30,7 @@ namespace Nanon.NeuralNetworks.Layer.Composition
 		}
 		
 		public static ICompositeLayer<A, A> ComposeGeteroneneous<A>(ISingleLayer<A, A>[] layers)
+			where A : IMatrix<A>
 		{
 			ICompositeLayer<A, A> acc = new OutputLayer<A>();
 			return layers.Reverse().Aggregate(acc, (a, b) => Compose(b, a));

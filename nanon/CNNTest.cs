@@ -25,8 +25,10 @@ namespace Nanon.Test
 		
 		static void LoadDataSet(string trainImagesPath, string trainLabelsPath, string testImagesPath, string testLabelsPath)
 		{
-			trainDataSet = Load(trainImagesPath, trainLabelsPath).Take(100);
-			testDataSet  = Load(testImagesPath, testLabelsPath).Take(100);
+			trainDataSet = Load(trainImagesPath, trainLabelsPath).Take(1000);
+			GC.Collect();
+			
+			testDataSet  = Load(testImagesPath, testLabelsPath).Take(1000);
 			GC.Collect();
 			
 			Console.WriteLine("Normalize data");
@@ -63,10 +65,12 @@ namespace Nanon.Test
 		public static void Test(string trainImagesPath, string trainLabelsPath, string testImagesPath, string testLabelsPath)
 		{
 			LoadDataSet(trainImagesPath, trainLabelsPath, testImagesPath, testLabelsPath);
+			GC.Collect();
+				
 			var network   = NetworkBuilder.Create(trainDataSet);
 			
 			var cost = Double.PositiveInfinity;
-			var optimizer = new GradientDescent<Matrix, Vector>(10, 0.1, x => 1, 1000, 
+			var optimizer = new GradientDescent<Matrix, Vector>(10, 0.1, x => 1, 5, 
 			    x => { 
 					Console.Write("trainSet: ");
 					cost = Test(x, trainDataSet, cost);

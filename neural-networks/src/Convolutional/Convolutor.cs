@@ -17,7 +17,7 @@ namespace Nanon.NeuralNetworks.Layer.Convolutional
 		internal Convolutor(IActivator activatorA) : 
 			base(activatorA)
 		{
-			bias = 0.0d;
+			bias = 0.1d;
 			biasGradient = 0.0d;
 		}
 		
@@ -31,7 +31,7 @@ namespace Nanon.NeuralNetworks.Layer.Convolutional
 			return outputs;
 		}
 
-		public override T PropagateBackward (T input, T predSignal, T error)
+		public override T PropagateBackward (T input, T error)
 		{
 			throw new NotImplementedException ();
 		}
@@ -45,8 +45,9 @@ namespace Nanon.NeuralNetworks.Layer.Convolutional
 		public override void Correct(double coeff)
 		{
 			gradients.Mul(coeff, gradients);
-			weights.Sub(gradients, weights);
+			weights.Add(gradients, weights);
 			gradients.SetToZero();
+			
 			bias -= coeff * biasGradient;
 			biasGradient = 0.0d;
 		}
@@ -61,7 +62,8 @@ namespace Nanon.NeuralNetworks.Layer.Convolutional
 			var kernelWidth  = inputWidth  - outputWidth  + 1;
 			var kernelHeight = inputHeight - outputHeight + 1;
 				
-			weights = new Matrix(kernelWidth, kernelHeight);
+			var eps = SingleLayer<Matrix, Matrix>.OptimalInitEpsilon(inputWidth, inputHeight);
+			weights = Matrix.RandomUnform(kernelWidth, kernelHeight, eps);
 			gradients = new Matrix(kernelWidth, kernelHeight);
 			predError = new Matrix(inputWidth, inputHeight);
 			

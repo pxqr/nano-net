@@ -10,8 +10,7 @@ namespace Nanon.NeuralNetworks.Layer
 	{
 		OutputT FeedForward(InputT input);
 		
-		InputT  PropagateBackward(InputT input, InputT predSignal, OutputT error);
-		OutputT Signal { get; }
+		InputT  PropagateBackward(InputT input, OutputT error);
 		OutputT Output { get; }
 		
 		void Gradient(InputT input, OutputT outputError);		

@@ -37,19 +37,17 @@ namespace Nanon.NeuralNetworks.Layer.Composition
 			for (var i = 0; i < size; ++i)
 			{
 				var iOut = layers[i].FeedForward(input[i]);
-				var iSig = layers[i].Signal;
 				
 				var iFrom = i * outputSize;
 				var iTo   = iFrom + outputSize;
 				
 				outputs.Pack(iFrom, iTo, iOut.ToVector);
-				signals.Pack (iFrom, iTo, iSig.ToVector);
 			}
 			
 			return outputs;	
 		}
 
-		public InputT[] PropagateBackward (InputT[] input, InputT[] predSignal, Vector error)
+		public InputT[] PropagateBackward (InputT[] input, Vector error)
 		{
 			for (var i = 0; i < size; ++i)
 			{
@@ -57,7 +55,7 @@ namespace Nanon.NeuralNetworks.Layer.Composition
 				var iTo   = iFrom + outputSize;
 				var unwindedError = new Matrix(outputSize, 1, error.Cut(iFrom, iTo).Cells);
 				
-				predErrors[i] = layers[i].PropagateBackward(input[i], predSignal[i], unwindedError);
+				predErrors[i] = layers[i].PropagateBackward(input[i], unwindedError);
 			}
 			return predErrors;
 		}

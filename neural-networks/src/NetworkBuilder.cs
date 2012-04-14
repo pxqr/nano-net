@@ -57,7 +57,7 @@ namespace Nanon.NeuralNetworks
 			
 			var splitter = new Splitter<Matrix, Matrix>(a);
 			var merger   = new MatrixMerger<Matrix>(b);
-			//var classif  = new FullyConnectedLayer(1 * count, 10, new Tanh());
+			var classif  = new FullyConnectedLayer(1 * count, 10, new Tanh());
 			
 			var comp = CompositeLayer<Vector, Vector[], Vector>.Compose(splitter, merger
 			//                                                             , classif

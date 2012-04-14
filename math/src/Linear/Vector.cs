@@ -84,6 +84,14 @@ namespace Nanon.Math.Linear
 			}
 		}		
 		
+		public Vector Copy()
+		{
+			var size = Size;
+			var cp = new double[size];
+			Array.Copy(cells, cp, size); 
+			return new Vector(cp);
+		}
+		
 		public int Size
 		{
 			get
@@ -186,6 +194,9 @@ namespace Nanon.Math.Linear
 		
 		public void Multiply(Vector lhs, Vector res)
 		{
+			if ((lhs.Size != res.Size) || (this.Size != res.Size))
+				throw new ArgumentException("Incorrect sizes!");
+			
 			var size = lhs.Size;
 			var resCells = res.cells;
 			var lhsCells = this.cells;
@@ -470,9 +481,15 @@ namespace Nanon.Math.Linear
 			throw new NotImplementedException ();
 		}
 
-		public void Mul (Vector lhs, Vector res)
+		public void Mul (Vector rhs, Vector res)
 		{
-			throw new NotImplementedException ();
+			var size = Size;
+			var resCells = res.cells;
+			var lhsCells = cells;
+			var rhsCells = rhs.cells;
+			
+			for (var i = 0; i < size; ++i)
+				resCells[i] = lhsCells[i] * rhsCells[i];
 		}
 
 		public void Transform(Func<double, double> f)

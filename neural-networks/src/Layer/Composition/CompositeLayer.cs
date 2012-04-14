@@ -17,17 +17,20 @@ namespace Nanon.NeuralNetworks.Layer.Composition
 			second = snd;
 		}
 		
-		public static ICompositeLayer<A, B> Singleton<A, B>(ISingleLayer<A, B> fst)
+		public static ICompositeLayer<A, B> Singleton<A, B>(ISingleLayer<A, B> fst) 
+			where B : IMatrix<B>
 		{
 			return new CompositeLayer<A, B, B>(fst, new OutputLayer<B>());
 		}
 		
 		public static ICompositeLayer<A, C> Compose<A, B, C>(ISingleLayer<A, B> fst, ISingleLayer<B, C> snd)
+			where C : IMatrix<C>
 		{
 			return new CompositeLayer<A, B, C>(fst, Singleton<B, C>(snd));
 		}
 		
 		public static ICompositeLayer<A, D> Compose<A, B, C, D>(ISingleLayer<A, B> fst, ISingleLayer<B, C> snd, ISingleLayer<C, D> trd)
+			where D : IMatrix<D>
 		{
 			var tail = Compose<B, C, D>(snd, trd);
 			return new CompositeLayer<A, B, D>(fst, tail);
@@ -42,23 +45,23 @@ namespace Nanon.NeuralNetworks.Layer.Composition
 			return output;
 		}
 
-		public InputT PropagateBackward(InputT input, InputT signal, OutputT error)
+		public InputT PropagateBackward(InputT input, OutputT error)
 		{
-			var errorInHiddenLayer = second.PropagateBackward(first.Output, first.Signal, error);
+			var errorInHiddenLayer = second.PropagateBackward(first.Output, error);
 			first.Gradient(input, errorInHiddenLayer);
-			return first.PropagateBackward(input, signal, errorInHiddenLayer);
+			return first.PropagateBackward(input, errorInHiddenLayer);
 		}
 		
 		public void Backprop(InputT input, OutputT error)
 		{
-			var errorInHiddenLayer = second.PropagateBackward(first.Output, first.Signal, error);
+			var errorInHiddenLayer = second.PropagateBackward(first.Output, error);
 			first.Gradient(input, errorInHiddenLayer);
 		}
 
 		public void Correct(double coeff)
 		{
 			first.Correct(coeff);
-			second.Correct(0.0d);
+			second.Correct(coeff);
 		}
 		
 		#endregion

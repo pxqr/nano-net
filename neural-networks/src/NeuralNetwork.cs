@@ -7,6 +7,7 @@ using Nanon.Model.Regression;
 using Nanon.NeuralNetworks;
 using Nanon.NeuralNetworks.Layer;
 using Nanon.NeuralNetworks.Layer.Composition;
+using Nanon.Math.Activator;
 
 namespace Nanon.NeuralNetworks
 {
@@ -30,10 +31,20 @@ namespace Nanon.NeuralNetworks
 
 		#region IHypothesis[InputT,OutputT] implementation
 
-		public void Gradient (InputT input, Vector output)
+		public void Gradient (InputT input, Vector trainingOutput)
 		{
-			var prediction = layers.FeedForward(input);
-			var error      = prediction - output;
+			var output = layers.FeedForward(input);
+			var error  = trainingOutput.ZeroCopy();
+			// o - t
+			output.Sub(trainingOutput, error);
+			
+			// f'(o)
+			//var deriv = output.ZeroCopy();
+			//output.Transform(new Tanh().Derivative, deriv);
+			
+			// f'(o) * (o - t)
+			//error.Mul(deriv, error);
+			
 			layers.Backprop(input, error);
 		}
 

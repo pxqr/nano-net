@@ -10,7 +10,7 @@ namespace Nanon.NeuralNetworks.Layer.Composition
 		OutputT FeedForward(InputT input);
 		
 		void Backprop(InputT input, OutputT error);
-		InputT  PropagateBackward(InputT input, InputT signal, OutputT error);
+		InputT  PropagateBackward(InputT input, OutputT error);
 		
 		void   Correct(double gradients);
 	}

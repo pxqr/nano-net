@@ -52,16 +52,16 @@ namespace Nanon.NeuralNetworks.Layer
 		//
 		//  preconditions : error lenght = OutputSize
 		//
-		public override Vector PropagateBackward(Vector predSignal, Vector predOutput, Vector error)
-		{
-			// der = f'(predSignal)
-			var der = predSignal.Map(activator.Derivative);
+		public override Vector PropagateBackward(Vector input, Vector error)
+		{	
+			// der = f'(input)
+			var der = input.Map(activator.Derivative);
 			
 			// predError = W' * error			
 			Matrix.MultiplyHorizontalWithoutBias(error, weights, predError);
 			
 			// predError = (W' * error) * f'(predSignal)
-			predError.Multiply(der, predError);
+			predError.Mul(der, predError);
 			
 			return predError;
 		}
@@ -73,7 +73,8 @@ namespace Nanon.NeuralNetworks.Layer
 		
 		public override void Correct(double coeff)
 		{    
-		    weights -= coeff * gradients;
+			gradients.Mul(coeff * inputFactor, gradients);
+		    weights.Sub(gradients, weights);
 			gradients.SetToZero();
 		}
 		
