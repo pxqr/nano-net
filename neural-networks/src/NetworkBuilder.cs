@@ -6,6 +6,7 @@ using Nanon.Math.Linear;
 using Nanon.Data;
 using Nanon.NeuralNetworks.Layer;
 using Nanon.NeuralNetworks.Layer.Composition;
+using Nanon.NeuralNetworks.Layer.Convolutional;
 
 namespace Nanon.NeuralNetworks
 {
@@ -42,9 +43,27 @@ namespace Nanon.NeuralNetworks
 			return new NeuralNetwork<Vector>(compositeLayer);
 		}
 		
-		static NeuralNetwork<Matrix> CreateTest()
+		public static NeuralNetwork<Matrix> Create(IDataSet<Matrix, Vector> dataSet)
 		{
-			return null; //new NeuralNetwork<Vector, Vector>(layers, EuLossFunc, ErrorFunction);
+			var count  = 10;
+			
+			var a = new ISingleLayer<Matrix, Matrix>[count];
+			for (var i = 0; i < count; ++i)
+				a[i] = new MatrixConvolutor(dataSet.FirstInput.Width, dataSet.FirstInput.Height, 2, 2, new Tanh());
+			
+			var b = new ISingleLayer<Matrix, Matrix>[count];
+			for (var i = 0; i < count; ++i)
+				b[i] = new MatrixSubsampler(2, 2, 1, 1, new Tanh());
+			
+			var splitter = new Splitter<Matrix, Matrix>(a);
+			var merger   = new MatrixMerger<Matrix>(b);
+			//var classif  = new FullyConnectedLayer(1 * count, 10, new Tanh());
+			
+			var comp = CompositeLayer<Vector, Vector[], Vector>.Compose(splitter, merger
+			//                                                             , classif
+			                                                             );
+			
+			return new NeuralNetwork<Matrix>(comp);
 		}
 	}
 }

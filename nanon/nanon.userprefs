@@ -51,6 +51,22 @@
     <Watch file="../neural-networks/src/Convolutional/VectorConvolutor.cs" line="54" offsetX="388" offsetY="848" expression="weights" liveUpdate="False" />
     <Watch file="../neural-networks/src/Layer/FullyConnectedLayer.cs" line="96" offsetX="564" offsetY="1392" expression="outputError" liveUpdate="False" />
   </MonoDevelop.Ide.DebuggingService.PinnedWatches>
+  <MonoDevelop.Ide.ItemProperties.Test>
+    <MonoDevelop.Ide.CustomExecutionModes>
+      <Data Name="Default (Custom)" Id="9ddb8817-9742-471d-9d04-d39f5b12f068" ModeId="Default" PromptForParameters="True">
+        <CommandData>
+          <Item Key="MonoDevelop.Ide.Execution.CustomArgsCustomizer">
+            <Value Arguments="/home/redner/projects/nanon/data/test-images.data /home/redner/projects/nanon/data/test-labels.data" ctype="CustomArgsExecutionModeData">
+              <EnvironmentVariables />
+            </Value>
+          </Item>
+          <Item Key="MonoDevelop.Ide.Execution.MonoExecutionCustomizer">
+            <Value ctype="MonoExecutionParameters" />
+          </Item>
+        </CommandData>
+      </Data>
+    </MonoDevelop.Ide.CustomExecutionModes>
+  </MonoDevelop.Ide.ItemProperties.Test>
   <MonoDevelop.Ide.ItemProperties.Converter>
     <MonoDevelop.Ide.CustomExecutionModes>
       <Data Name="Default (Custom)" Id="92820823-239e-429c-b43c-2ced3ed8ea85" ModeId="Default">
@@ -67,20 +83,4 @@
       </Data>
     </MonoDevelop.Ide.CustomExecutionModes>
   </MonoDevelop.Ide.ItemProperties.Converter>
-  <MonoDevelop.Ide.ItemProperties.nanon>
-    <MonoDevelop.Ide.CustomExecutionModes>
-      <Data Name="Default (Custom)" Id="9ddb8817-9742-471d-9d04-d39f5b12f068" ModeId="Default" PromptForParameters="True">
-        <CommandData>
-          <Item Key="MonoDevelop.Ide.Execution.CustomArgsCustomizer">
-            <Value Arguments="/home/redner/projects/nanon/data/test-images.data /home/redner/projects/nanon/data/test-labels.data" ctype="CustomArgsExecutionModeData">
-              <EnvironmentVariables />
-            </Value>
-          </Item>
-          <Item Key="MonoDevelop.Ide.Execution.MonoExecutionCustomizer">
-            <Value ctype="MonoExecutionParameters" />
-          </Item>
-        </CommandData>
-      </Data>
-    </MonoDevelop.Ide.CustomExecutionModes>
-  </MonoDevelop.Ide.ItemProperties.nanon>
 </Properties>

@@ -5,41 +5,32 @@ using Nanon.Math.Activator;
 	
 namespace Nanon.NeuralNetworks.Layer
 {
-	public class FullyConnectedLayer : ISingleLayer<Vector, Vector>
+	public class FullyConnectedLayer : SingleLayer<Vector, Vector>
 	{
 		// state
-		IActivator activator;
 		Matrix weights;
 		
 		// "cache"
-		Vector signals;
-		Vector outputs;  
 		Matrix gradients;
 		Vector predError;
 		double inputFactor;
 		
 		public static IActivator defaultActivator = new Nanon.Math.Activator.Tanh();
 		
-		public FullyConnectedLayer(int inputSize, int outputSize, IActivator activationFunction)
+		public FullyConnectedLayer(int inputSize, int outputSize, IActivator activationFunction) : 
+			base(activationFunction) 
 		{
 			// "(+ 1)" because of bias term
 			var eps = OptimalInitEpsilon(inputSize + 1, outputSize);
 			weights = Matrix.RandomUnform(inputSize + 1, outputSize, eps);
 			
-			outputs = new Vector(outputSize);
 			signals = new Vector(outputSize);
+			outputs = new Vector(outputSize);
 			predError = new Vector(inputSize);
-			
-			activator = activationFunction;
 			
 			inputFactor = System.Math.Sqrt(inputSize + 1);
 			gradients = new Matrix(inputSize + 1, outputSize);
 		}		
-		
-		static double OptimalInitEpsilon(int inputSize, int outputSize)
-		{
-			return System.Math.Sqrt(6) / System.Math.Sqrt(inputSize + outputSize);
-		}
 		
 		#region ILayer[Vector,Vector] implementation
 		
@@ -47,12 +38,10 @@ namespace Nanon.NeuralNetworks.Layer
 		//  y = f (W * x + intercept)
 		//  preconditions : input length = InputSize
 		//
-		public Vector FeedForward(Vector input)
+		public override Vector FeedForward(Vector input)
 		{
-			// signals = weights * (1 `concat` input);
 		    Matrix.MultiplyVerticalWithBias(weights, input, signals);
-			// output = f (signals);
-			Vector.Transform(activator.Activate, signals, outputs);
+			signals.Transform(activator.Activate, outputs);
 			
 			return outputs;
 		}
@@ -63,7 +52,7 @@ namespace Nanon.NeuralNetworks.Layer
 		//
 		//  preconditions : error lenght = OutputSize
 		//
-		public Vector PropagateBackward(Vector predSignal, Vector predOutput, Vector error)
+		public override Vector PropagateBackward(Vector predSignal, Vector predOutput, Vector error)
 		{
 			// der = f'(predSignal)
 			var der = predSignal.Map(activator.Derivative);
@@ -77,48 +66,17 @@ namespace Nanon.NeuralNetworks.Layer
 			return predError;
 		}
 		
-		public Vector Signal 
-		{ 
-			get 
-			{
-				return signals;	
-			}
-		}
-		
-		public Vector Output
-		{
-			get 
-			{
-				return outputs;
-			}
-		}
-		
-		public void Gradient(Vector input, Vector outputError)
+		public override void Gradient(Vector input, Vector outputError)
 		{
 			Matrix.MultiplyWithTrasposedWithBiasAdd(outputError, input, gradients);
-			//var tmp = gradient.ZeroCopy();
-			//Matrix.MultiplyWithTrasposed(outputError, Vector.Prepend(input), tmp);
-			//gradient = gradient + tmp;
 		}
 		
-		public void Correct(double coeff)
+		public override void Correct(double coeff)
 		{    
-		   // weights -= coeff * gradients;
+		    weights -= coeff * gradients;
 			gradients.SetToZero();
 		}
 		
 		#endregion
-
-		public Matrix Weights {
-			get {
-				return this.weights;
-			}
-		}
-
-		public Matrix Gradients {
-			get {
-				return this.gradients;
-			}
-		}
 	}
 }

@@ -22,14 +22,14 @@ namespace Nanon.NeuralNetworks.Layer.Composition
 			return new CompositeLayer<A, B, B>(fst, new OutputLayer<B>());
 		}
 		
-		public static ICompositeLayer<A, C> Compose2<A, B, C>(ISingleLayer<A, B> fst, ISingleLayer<B, C> snd)
+		public static ICompositeLayer<A, C> Compose<A, B, C>(ISingleLayer<A, B> fst, ISingleLayer<B, C> snd)
 		{
 			return new CompositeLayer<A, B, C>(fst, Singleton<B, C>(snd));
 		}
 		
-		public static ICompositeLayer<A, D> Compose3<A, B, C, D>(ISingleLayer<A, B> fst, ISingleLayer<B, C> snd, ISingleLayer<C, D> trd)
+		public static ICompositeLayer<A, D> Compose<A, B, C, D>(ISingleLayer<A, B> fst, ISingleLayer<B, C> snd, ISingleLayer<C, D> trd)
 		{
-			var tail = Compose2<B, C, D>(snd, trd);
+			var tail = Compose<B, C, D>(snd, trd);
 			return new CompositeLayer<A, B, D>(fst, tail);
 		}
 		

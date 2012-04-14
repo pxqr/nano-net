@@ -9,7 +9,7 @@ namespace Nanon.Math.Linear
 		Vector ToVector { get; }
 	}
 	
-	public class Vector : IVector
+	public class Vector : IVector, IMatrix<Vector>
 	{
 		double[] cells;
 		
@@ -84,20 +84,12 @@ namespace Nanon.Math.Linear
 			}
 		}		
 		
-		// 
 		public int Size
 		{
 			get
 			{
 				return cells.Length;	
 			}
-		}
-		
-		
-		// 
-		public Vector ZeroCopy()
-		{
-			return new Vector(Size);	
 		}
 		
 		public void SetToZero()
@@ -179,27 +171,7 @@ namespace Nanon.Math.Linear
 				product += rhsc[i + 1] * lhsc[i];
 			
 			return product;
-		}
-		
-		public void Transform(Func<double, double> f)
-		{
-			var size = Size;
-			
-			for (var i = 0; i < size; ++i)
-			{
-				cells[i] = f(cells[i]);
-			}
-		}
-		
-		public static  void  Transform(Func<double, double> f, Vector src, Vector res)
-		{
-			var size = src.Size;
-			
-			for (var i = 0; i < size; ++i)
-			{
-				res.cells[i] = f(src.cells[i]);
-			}
-		}		
+		}	
 		
 		//
 		public void Multiply(double scalar, Vector res)
@@ -223,38 +195,7 @@ namespace Nanon.Math.Linear
 				resCells[i] = rhsCells[i] * lhsCells[i];
 		}
 		
-		public void Add(Vector lhs, Vector res)
-		{
-			var size = lhs.Size;
-			var resCells = res.cells;
-			var lhsCells = this.cells;
-			var rhsCells = lhs.cells;
-			
-			for (var i = 0; i < size; ++i)
-				resCells[i] = rhsCells[i] + lhsCells[i];
-		}
-		
-		public void Add(double lhs, Vector res)
-		{
-			var size = Size;
-			var resCells = res.cells;
-			var rhsCells = this.cells;
-			
-			for (var i = 0; i < size; ++i)
-				resCells[i] = lhs + rhsCells[i];
-		}
-		
-		public void Sub(Vector rhs, Vector res)
-		{
-			var size = Size;
-			var resCells = res.cells;
-			var lhsCells = this.cells;
-			var rhsCells = rhs.cells;
-			
-			for (var i = 0; i < size; ++i)
-				resCells[i] = lhsCells[i] - rhsCells[i];
-		}
-		
+
 		//////////////////////////////////////////////////////////////////////////////
 		//                        "Pretty" BLAS
 		//  It's can create new objects during procedure lifetime
@@ -406,6 +347,62 @@ namespace Nanon.Math.Linear
 				cells[i] = value;	
 			}
 		}
+
+		#region IMatrix[Vector] implementation
+		
+		public Vector Unwind 
+		{ 
+			get
+			{
+				return this;	
+			}
+		}
+		
+		public Vector ZeroCopy()
+		{
+			return new Vector(Size);	
+		}
+		
+		public void Convolve(Vector kernel, Vector result)
+		{
+			var inputSize = Size;
+			var kernelSize = kernel.Size;
+			var inputCells = this.cells;
+			var kernelCells = kernel.cells;
+			var resultCells = result.cells;
+			
+			if (result.Size != (inputSize - kernelSize + 1))
+				throw new ArgumentException("Incorrect sizes!");
+			
+			for (var j = 0; j < (inputSize - kernelSize + 1); ++j)
+			{
+				double acc = 0.0d;
+				
+				for (var i = 0; i < kernelSize; ++i)
+					acc += kernelCells[i] * inputCells[j + i];
+				
+				resultCells[j] = acc;
+			}		
+		}
+
+		public void Involve(Vector error, Vector result)
+		{
+			var inputSize = Size;
+			var inputCells = cells;
+			var errorSize  = error.Size;
+			var errorCells = error.cells;
+			var resultCells = result.cells;
+			var resultSize  = result.Size;
+			
+			if (errorSize != (inputSize - resultSize + 1))
+				throw new ArgumentException("Incorrect sizes!");
+			
+			for (var j = 0; j < (inputSize - resultSize + 1); ++j)
+			{
+				for (var i = 0; i < resultSize; ++i)
+					resultCells[i] += errorCells[j]* inputCells[i + j];
+			}		
+		}
 		
 		public void DownsampleBy2(Vector res)
 		{
@@ -430,46 +427,75 @@ namespace Nanon.Math.Linear
 			}
 		}
 		
-		public void Convolve(Vector kernel, Vector result)
+		public void Add(double lhs, Vector res)
 		{
-			var inputSize = Size;
-			var kernelSize = kernel.Size;
-			var inputCells = this.cells;
-			var kernelCells = kernel.cells;
-			var resultCells = result.cells;
+			var size = Size;
+			var resCells = res.cells;
+			var rhsCells = this.cells;
 			
-			if (result.Size != (inputSize - kernelSize + 1))
-				throw new ArgumentException("Incorrect sizes!");
+			for (var i = 0; i < size; ++i)
+				resCells[i] = lhs + rhsCells[i];
+		}
+
+		public void Sub (double val, Vector res)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public void Add(Vector lhs, Vector res)
+		{
+			var size = lhs.Size;
+			var resCells = res.cells;
+			var lhsCells = this.cells;
+			var rhsCells = lhs.cells;
 			
-			for (var j = 0; j < (inputSize - kernelSize + 1); ++j)
-			{
-				double acc = 0.0d;
-				
-				for (var i = 0; i < kernelSize; ++i)
-					acc += kernelCells[i] * inputCells[j + i];
-				
-				resultCells[j] = acc;
-			}		
+			for (var i = 0; i < size; ++i)
+				resCells[i] = rhsCells[i] + lhsCells[i];
+		}
+
+		public void Sub(Vector rhs, Vector res)
+		{
+			var size = Size;
+			var resCells = res.cells;
+			var lhsCells = this.cells;
+			var rhsCells = rhs.cells;
+			
+			for (var i = 0; i < size; ++i)
+				resCells[i] = lhsCells[i] - rhsCells[i];
 		}
 		
-		public void Involve(Vector error, Vector result)
+
+		public void Mul (double val, Vector res)
 		{
-			var inputSize = Size;
-			var inputCells = cells;
-			var errorSize  = error.Size;
-			var errorCells = error.cells;
-			var resultCells = result.cells;
-			var resultSize  = result.Size;
-			
-			if (errorSize != (inputSize - resultSize + 1))
-				throw new ArgumentException("Incorrect sizes!");
-			
-			for (var j = 0; j < (inputSize - resultSize + 1); ++j)
-			{
-				for (var i = 0; i < resultSize; ++i)
-					resultCells[i] += errorCells[j]* inputCells[i + j];
-			}		
+			throw new NotImplementedException ();
 		}
+
+		public void Mul (Vector lhs, Vector res)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public void Transform(Func<double, double> f)
+		{
+			var size = Size;
+			
+			for (var i = 0; i < size; ++i)
+			{
+				cells[i] = f(cells[i]);
+			}
+		}
+		
+		public void Transform(Func<double, double> f, Vector res)
+		{
+			var size = Size;
+			
+			for (var i = 0; i < size; ++i)
+			{
+				res.cells[i] = f(cells[i]);
+			}
+		}	
+		
+		#endregion
 	}
 }
 

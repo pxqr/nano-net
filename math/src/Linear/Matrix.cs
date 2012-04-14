@@ -6,7 +6,7 @@ using Nanon.FileFormat;
 
 namespace Nanon.Math.Linear
 {	
-	public class Matrix : IVector
+	public class Matrix : IVector, IMatrix<Matrix>
 	{		
 		double[] cells;
 		int    width;
@@ -32,14 +32,6 @@ namespace Nanon.Math.Linear
 			res.Transform(dummy => 2 * range * rand.NextDouble());
 			
 			return res;
-		}
-		
-		public void SetToZero()
-		{
-			var size  = Size;
-			
-			for (var i = 0; i < size; ++i)
-				cells[i] = 0.0d;
 		}
 		
 		public Matrix(int w, int h) {
@@ -113,10 +105,7 @@ namespace Nanon.Math.Linear
 			}
 		}
 		
-		public Matrix ZeroCopy()
-		{
-			return new Matrix(width, height, new double[Size]);
-		}
+
 			        
 	    public int Size 
 		{
@@ -153,13 +142,7 @@ namespace Nanon.Math.Linear
 		}
 		
 		// for normalization
-		public double Sum
-		{
-			get
-			{
-				return cells.Sum();
-			}
-		}
+
 		
 		public double Mean
 		{
@@ -189,12 +172,12 @@ namespace Nanon.Math.Linear
 			return new Matrix(width, height, mapped);
 		}
 		
-		public void Transform(Func<double, double> f) 
+		public static void Transform(Func<double, double> f, Matrix src, Matrix res) 
 		{
-			var size = Size;
+			var size = src.Size;
 			
 			for (var i = 0; i < size; ++i)
-			  cells[i] = f(cells[i]);
+			  res.cells[i] = f(src.cells[i]);
 		}
 		
 		public double Dot(Matrix rhs)
@@ -237,43 +220,6 @@ namespace Nanon.Math.Linear
 				adds.cells[i] = lhs.cells[i] + rhs.cells[i];
 			
 			return adds;
-		}
-		
-		public void AddInplace(Matrix rhs)
-		{
-			if (Size != rhs.Size)
-				throw new Exception("Cant add inequal vectors or matrices.");
-			
-			var size = Size;
-			
-			for (var i = 0; i < size; ++i)
-				cells[i] += rhs.cells[i];
-		}
-		
-		public void AddInplace(Vector rhs)
-		{
-			if (Size != rhs.Size)
-				throw new Exception("Cant add inequal vectors or matrices.");
-			
-			var size = Size;
-			
-			var rcells = rhs.Cells;
-			
-			for (var i = 0; i < size; ++i)
-				cells[i] += rcells[i];
-		}
-		
-		public void SubInplace(Vector rhs)
-		{
-			if (Size != rhs.Size)
-				throw new Exception("Cant add inequal vectors or matrices.");
-			
-			var size = Size;
-			
-			var rcells = rhs.Cells;
-			
-			for (var i = 0; i < size; ++i)
-				cells[i] -= rcells[i];
 		}
 		
 		public static Matrix operator -(double lhs, Matrix rhs)
@@ -379,10 +325,6 @@ namespace Nanon.Math.Linear
 				
 			var resCells = res.cells;
 			
-			var a = 0;
-			if (rhs.Size >= 500)
-				a = 1;
-			
 			for (var j = 0; j < sizeL; ++j)
 			{
 				var offset = j * (sizeR + 1);
@@ -470,7 +412,38 @@ namespace Nanon.Math.Linear
 			}
 		}
 		
-		public static void Convolve(Matrix matrix, Matrix kernel, Matrix res)
+		#region IMatrix[Matrix] implementation
+		
+		public void SetToZero()
+		{
+			var size  = Size;
+			
+			for (var i = 0; i < size; ++i)
+				cells[i] = 0.0d;
+		}
+		
+		public Vector Unwind 
+		{ 
+			get
+			{
+				return new Vector(cells);
+			}
+		}
+		
+		public Matrix ZeroCopy()
+		{
+			return new Matrix(width, height, new double[Size]);
+		}
+		
+		public double Sum
+		{
+			get
+			{
+				return cells.Sum();
+			}
+		}
+		
+		public void Convolve(Matrix kernel, Matrix res)
 		{
 			Func<int, bool> even = x => (x & 1) == 0;
 			
@@ -480,8 +453,8 @@ namespace Nanon.Math.Linear
 			var widthCutOff  = kernel.width / 2;
 			var heightCutOff = kernel.height / 2;
 			
-			var inputWidth   = matrix.width;
-			var inputHeight  = matrix.height;
+			var inputWidth   = width;
+			var inputHeight  = height;
 			
 			var outputWidth  = res.width;
 			var outputHeight = res.height;
@@ -493,7 +466,7 @@ namespace Nanon.Math.Linear
 			/////////  here ///////		
 			
 			var resCells     = res.cells;
-			var inputCells   = matrix.cells;
+			var inputCells   = cells;
 			var kernelCells  = kernel.cells;
 				
 			for (var row = 0; row <= inputHeight - kernelHeight; ++row)
@@ -514,5 +487,146 @@ namespace Nanon.Math.Linear
 					resCells[resIndex] = acc;
 				}
 		}
+
+		public void Involve(Matrix err, Matrix kernel)
+		{
+			var inputWidth   = width;
+			var inputHeight  = height;
+			
+			var kernelWidth  = kernel.width;
+			var kernelHeight = kernel.height;
+			
+			var errCells     = err.cells;
+			var inputCells   = cells;
+			var kernelCells  = kernel.cells;
+				
+			for (var row = 0; row <= inputHeight - kernelHeight; ++row)
+			    for (var col = 0; col <= inputWidth - kernelWidth; ++col)
+				{
+			    	for (var j = 0; j < kernelHeight; ++j)
+					{
+						var inputOffset  = col + (j + row) * inputWidth;
+						var errorIndex   = col + row  * err.width; 
+					    var kernelOffset = j * kernel.width;
+					
+			     		for (var i = 0; i < kernelWidth; ++i)
+
+						kernelCells[kernelOffset++] += inputCells[inputOffset++] * errCells[errorIndex];
+					}
+				}
+		}
+		
+		public void DownsampleBy2(Matrix res)
+		{
+			for (int j = 0; j < res.height; ++j)
+			{
+				var inputOffset = 2 * j * width;
+				
+				for (int i = 0; i < res.width; ++i)
+				{
+					var targetIndex = i + j * res.width;
+					var topIndex = 2 * i + inputOffset;
+					var bottomIndex = topIndex + width;
+					
+					res.cells[targetIndex] = 0.25d * (
+							cells[topIndex]    + cells[1 + topIndex] +
+							cells[bottomIndex] + cells[1 + bottomIndex]
+							);
+				}
+			}
+		}
+		
+		public void UpsampleBy2(Matrix res)
+		{
+			for (int j = 0; j < height; ++j)
+			{
+				var inputOffset  = j * width;
+				var outputOffset = 2 * j * width;
+					
+				for (int i = 0; i < width; ++i)
+				{
+					var val = cells[i + inputOffset];
+					var topOffset     = 2 * i + outputOffset;
+					var bottomOffset  = topOffset + 2 * width;
+					
+					res.cells[topOffset]        = val;
+					res.cells[topOffset + 1]    = val;
+					res.cells[bottomOffset]     = val;
+					res.cells[bottomOffset + 1] = val;
+				}
+			}
+		}
+
+		public void Add (double val, Matrix res)
+		{
+			var size = Size;
+			
+			for (var i = 0; i < size; ++i)
+				res.cells[i] = cells[i] + val;
+		}
+
+		public void Sub (double val, Matrix res)
+		{
+			var size = Size;
+			
+			for (var i = 0; i < size; ++i)
+				res.cells[i] = cells[i] - val;
+		}
+
+		public void Add(Matrix rhs, Matrix res)
+		{
+			if (Size != rhs.Size)
+				throw new Exception("Cant add inequal vectors or matrices.");
+			
+			var size = Size;
+			
+			for (var i = 0; i < size; ++i)
+				res.cells[i] = cells[i] + rhs.cells[i];
+		}
+
+		public void Sub(Matrix rhs, Matrix res)
+		{
+			if (Size != rhs.Size)
+				throw new Exception("Cant add inequal vectors or matrices.");
+			
+			var size = Size;
+			
+			for (var i = 0; i < size; ++i)
+				res.cells[i] = cells[i] - rhs.cells[i];
+		}
+
+		public void Mul(double val, Matrix res)
+		{
+			Transform(x => x * val, res);
+		}
+
+		public void Mul(Matrix rhs, Matrix res)
+		{
+			if (Size != rhs.Size)
+				throw new Exception("Cant mul inequal vectors or matrices.");
+			
+			var size = Size;
+			
+			for (var i = 0; i < size; ++i)
+				res.cells[i] = cells[i] * rhs.cells[i];
+		}
+		
+		public void Transform (Func<double, double> f, Matrix res)
+		{
+			var size = Size;
+			
+			for (var i = 0; i < size; ++i)
+			  res.cells[i] = f(cells[i]);
+		}
+		
+		public void Transform(Func<double, double> f) 
+		{
+			var size = Size;
+			
+			for (var i = 0; i < size; ++i)
+			  cells[i] = f(cells[i]);
+		}
+		
+		#endregion
 	}
 }

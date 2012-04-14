@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nanon", "nanon.csproj", "{E8D8CFD4-0804-4DD4-8EFC-75F24DB89A18}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test.csproj", "{E8D8CFD4-0804-4DD4-8EFC-75F24DB89A18}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Converter", "..\converter\src\Converter.csproj", "{68F06D03-0DB2-4D97-BD66-31E6179960FD}"
 EndProject
@@ -57,7 +57,7 @@ Global
 		{E8D8CFD4-0804-4DD4-8EFC-75F24DB89A18}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
-		StartupItem = nanon.csproj
+		StartupItem = Test.csproj
 		Policies = $0
 		$0.DotNetNamingPolicy = $1
 		$1.DirectoryNamespaceAssociation = Flat
