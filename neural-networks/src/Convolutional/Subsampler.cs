@@ -10,19 +10,16 @@ namespace Nanon.NeuralNetworks.Layer.Convolutional
 		protected T downsampled;
 		protected T predError;
 		
-		double weight;
-		double gradient;
+		double weight       = -0.5d;
+		double gradient     = 0.0d;
 		
-		double bias;
-		double biasGradient;
+		double bias         = 0.15d;
+		double biasGradient = 0.0d;
 		
-		internal Subsampler(IActivator activator): base(activator) 
-		{
-			weight   = 0.1d;
-			gradient = 0.0d;
-			bias     = 0.1d;
-			biasGradient = 0.0d;
-		}
+		protected double weightFactor = 1.0d;
+		protected double biasFactor   = 1.0d;
+		
+		internal Subsampler(IActivator activator): base(activator) 	{}
 		
 		public static Subsampler<Vector> VectorSubsampler(int inputSize, int outputSize, IActivator activatorA)
 		{
@@ -65,8 +62,8 @@ namespace Nanon.NeuralNetworks.Layer.Convolutional
 
 		public override void Gradient (T input, T outputError)
 		{
-			gradient     += outputError.Unwind * downsampled.Unwind;
-			biasGradient += outputError.Sum;
+			gradient     += (outputError.Unwind * downsampled.Unwind) * weightFactor;
+			biasGradient += (outputError.Sum * biasFactor);
 		}
 
 		public override void Correct (double coeff)
@@ -89,13 +86,14 @@ namespace Nanon.NeuralNetworks.Layer.Convolutional
 			if (inputWidth != outputWidth * 2 || inputHeight != outputHeight * 2)
 				throw new ArgumentException("Incorrect sizes!");
 			
-			var conv = new Subsampler<Matrix>(new Tanh());
-				
 			predError = new Matrix(inputWidth, inputHeight);
 			
 			downsampled = new Matrix(outputWidth, outputHeight);
 			signals = new Matrix(outputWidth, outputHeight);
 			outputs = new Matrix(outputWidth, outputHeight);
+			
+			biasFactor = 1 / (double)signals.Size;
+			weightFactor = biasFactor;
 		}
 	}
 }

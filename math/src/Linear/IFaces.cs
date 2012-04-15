@@ -12,7 +12,7 @@ namespace Nanon.Math.Linear
 		
 		void Convolve(T kernel, T res);
 		void Deconvolve(T kernel, T res);
-		void Involve(T outputs, T kernel);
+		void InvolveAdd(T outputs, T kernel);
 		
 		void DownsampleBy2(T res);
 		void UpsampleBy2(T res);

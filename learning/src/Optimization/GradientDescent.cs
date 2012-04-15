@@ -73,26 +73,23 @@ namespace Nanon.Learning.Optimization
 		void DoGradientStep(IHypothesis<InputT, OutputT> hypothesis, IEnumerable<Tuple<InputT, OutputT> > exsamples, double coeff, int stepSize)
 		{
 			var batchSize = 0;
+			var a = System.Math.Min(stepSize, exsamples.Count());
+			var factor = (coeff / (double)a) * learningRate;
 			
 			foreach(var ex in exsamples)
 			{
 				hypothesis.Gradient(ex.Item1, ex.Item2);
-				
 				++batchSize;
 				
 				if (batchSize == stepSize)
 				{
-					var factor  = (coeff / (double)batchSize) * learningRate;
 					hypothesis.Correct(factor);
 					batchSize = 0;
 				}
 			}
 			
 			if (batchSize != 0)
-			{
-				var factor  = (coeff / (double)batchSize) * learningRate;
 				hypothesis.Correct(factor);
-			}
 		}
 		
 		public void Optimize(IHypothesis<InputT, OutputT> hypothesis, IEnumerable<Tuple<InputT, OutputT> > exsamples)

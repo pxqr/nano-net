@@ -13,6 +13,8 @@ namespace Nanon.NeuralNetworks.Layer
 		// "cache"
 		Matrix gradients;
 		Vector predError;
+		
+		// balancer
 		double inputFactor;
 		
 		public static IActivator defaultActivator = new Nanon.Math.Activator.Tanh();

@@ -7,6 +7,7 @@ using Nanon.Model.Classifier;
 using Nanon.Learning.Optimization;
 using Nanon.NeuralNetworks;
 using System.Linq;
+using System.Diagnostics;
 
 namespace Nanon.Test
 {
@@ -28,7 +29,7 @@ namespace Nanon.Test
 			trainDataSet = Load(trainImagesPath, trainLabelsPath).Take(1000);
 			GC.Collect();
 			
-			testDataSet  = Load(testImagesPath, testLabelsPath).Take(1000);
+			testDataSet  = Load(testImagesPath, testLabelsPath).Take (200);
 			GC.Collect();
 			
 			Console.WriteLine("Normalize data");
@@ -69,23 +70,39 @@ namespace Nanon.Test
 				
 			var network   = NetworkBuilder.Create(trainDataSet);
 			
+			Console.WriteLine("Initial");
+			Test(network, testDataSet);
+			Console.WriteLine("StartLearning");
+			
 			var cost = Double.PositiveInfinity;
-			var optimizer = new GradientDescent<Matrix, Vector>(10, 0.1, x => 1, 5, 
+			var timer = new Stopwatch();
+			timer.Start();				
+			
+			var optimizer = new GradientDescent<Matrix, Vector>(3, 0.001, x => 1, 5, 
 			    x => { 
+					NeuralNetwork<Matrix>.counter = 0;
+					timer.Stop();		
 					Console.Write("trainSet: ");
 					cost = Test(x, trainDataSet, cost);
 					Console.Write(" || ");
 					Console.Write("testSet:  ");
 					Test(x, testDataSet);
 					Console.WriteLine();
+					Console.WriteLine("Training time: {0} ", timer.ElapsedMilliseconds);	
+					timer.Reset();
+					timer.Start();				
 				});
 			
 			var trainer   = new Trainer<Matrix, Vector>(optimizer);
 			
-			Console.WriteLine("Initial");
-			Test(network, testDataSet);
-			Console.WriteLine("StartLearning");
-			trainer.Train(network, trainDataSet);
+			for (var i = 0; i < 3; ++i)
+			{
+				Console.WriteLine("next generation");	
+				trainer.Train(network, trainDataSet);
+				optimizer.IterationCount += 1;
+				//optimizer.InitialStepSize *= 2;
+			}
+			
 			Console.WriteLine("EndLearning");
 			Test(network, testDataSet);
 		}

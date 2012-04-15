@@ -1,12 +1,12 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="../neural-networks/src/Convolutional/VectorConvolutor.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="../math/src/Linear/Matrix.cs">
     <Files>
-      <File FileName="Main.cs" Line="84" Column="76" />
-      <File FileName="MergerSplitterTest.cs" Line="115" Column="11" />
-      <File FileName="../neural-networks/src/Convolutional/VectorConvolutor.cs" Line="75" Column="4" />
-      <File FileName="../math/src/Linear/Matrix.cs" Line="37" Column="15" />
-      <File FileName="../math/src/Linear/Vector.cs" Line="442" Column="1" />
+      <File FileName="../neural-networks/src/Convolutional/Convolutor.cs" Line="52" Column="4" />
+      <File FileName="../neural-networks/src/Convolutional/Subsampler.cs" Line="77" Column="6" />
+      <File FileName="../neural-networks/src/NetworkBuilder.cs" Line="72" Column="46" />
+      <File FileName="../math/src/Linear/Matrix.cs" Line="388" Column="24" />
+      <File FileName="CNNTest.cs" Line="81" Column="58" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -15,20 +15,18 @@
             <Node name="Optimization" expanded="True" />
             <Node name="Tools" expanded="True" />
           </Node>
-          <Node name="Math" expanded="True">
+          <Node name="Math" expanded="True" selected="True">
             <Node name="Activator" expanded="True" />
             <Node name="Linear" expanded="True" />
           </Node>
-          <Node name="nanon" expanded="True" />
           <Node name="NeuralNetworks" expanded="True">
-            <Node name="Convolutional" expanded="True">
-              <Node name="VectorConvolutor.cs" selected="True" />
-            </Node>
+            <Node name="Convolutional" expanded="True" />
             <Node name="GraphBased" expanded="True" />
             <Node name="Layer" expanded="True">
               <Node name="Composition" expanded="True" />
             </Node>
           </Node>
+          <Node name="Test" expanded="True" />
         </State>
       </Pad>
       <Pad Id="ClassPad">
@@ -44,12 +42,18 @@
     </Pads>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
-    <BreakpointStore />
+    <BreakpointStore>
+      <Breakpoint file="/home/redner/projects/nanon/src/neural-networks/src/Convolutional/VectorSubsampler.cs" line="62" />
+      <Breakpoint file="/home/redner/projects/nanon/src/neural-networks/src/Convolutional/Convolutor.cs" line="37" />
+    </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches>
     <Watch file="../learning/src/Tools/RegressionTester.cs" line="38" offsetX="500" offsetY="592" expression="prediction" liveUpdate="False" />
     <Watch file="../neural-networks/src/Convolutional/VectorConvolutor.cs" line="54" offsetX="388" offsetY="848" expression="weights" liveUpdate="False" />
     <Watch file="../neural-networks/src/Layer/FullyConnectedLayer.cs" line="96" offsetX="564" offsetY="1392" expression="outputError" liveUpdate="False" />
+    <Watch file="../math/src/Linear/Matrix.cs" line="369" offsetX="828" offsetY="5872" expression="lhs.cells[0]" liveUpdate="False" />
+    <Watch file="../math/src/Linear/Vector.cs" line="455" offsetX="516" offsetY="6992" expression="error.cells[0]" liveUpdate="False" />
+    <Watch file="../neural-networks/src/Convolutional/Subsampler.cs" line="56" offsetX="420" offsetY="880" expression="errors" liveUpdate="False" />
   </MonoDevelop.Ide.DebuggingService.PinnedWatches>
   <MonoDevelop.Ide.ItemProperties.Test>
     <MonoDevelop.Ide.CustomExecutionModes>

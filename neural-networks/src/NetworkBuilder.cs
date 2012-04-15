@@ -45,23 +45,23 @@ namespace Nanon.NeuralNetworks
 		
 		public static NeuralNetwork<Matrix> Create(IDataSet<Matrix, Vector> dataSet)
 		{
-			var count  = 10;
+			var count  = 5;
 			
 			var a = new ISingleLayer<Matrix, Matrix>[count];
 			for (var i = 0; i < count; ++i)
-				a[i] = new MatrixConvolutor(28, 28, 20, 20, new Tanh());
+				a[i] = new MatrixConvolutor(28, 28, 24, 24, new Tanh());
 			
 			var b = new ISingleLayer<Matrix, Matrix>[count];
 			for (var i = 0; i < count; ++i)
-				b[i] = new MatrixSubsampler(20, 20, 10, 10, new Tanh());
+				b[i] = new MatrixSubsampler(24, 24, 12, 12, new Tanh());
 			
 			var c = new ISingleLayer<Matrix, Matrix>[count];
 			for (var i = 0; i < count; ++i)
-				c[i] = new MatrixConvolutor(10, 10, 2, 2, new Tanh());
+				c[i] = new MatrixConvolutor(12, 12, 8, 8, new Tanh());
 			
 			var d = new ISingleLayer<Matrix, Matrix>[count];
 			for (var i = 0; i < count; ++i)
-				d[i] = new MatrixSubsampler(2, 2, 1, 1, new Tanh());
+				d[i] = new MatrixSubsampler(8, 8, 4, 4, new Tanh());
 			
 			
 			var splitter = new Splitter<Matrix, Matrix>(a);
@@ -69,13 +69,13 @@ namespace Nanon.NeuralNetworks
 			var applicator2 = new Applicator<Matrix, Matrix>(c);
 			var merger   = new MatrixMerger<Matrix>(d);
 			
-			var classif  = new FullyConnectedLayer(1 * count, 10, new Tanh());
+			var classif  = new FullyConnectedLayer(16 * count, 10, new Tanh());
 			
 			var comp = CompositeLayer<Vector, Vector[], Vector>.Compose(splitter, 
 			                                                            applicator1, 
 			                                                            applicator2,
-			                                                            merger
-			//                                                             , classif
+			                                                            merger,
+			                                                            classif
 			                                                             );
 			
 			return new NeuralNetwork<Matrix>(comp);

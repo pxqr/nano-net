@@ -401,7 +401,7 @@ namespace Nanon.Math.Linear
 			throw new NotImplementedException();	
 		}
 
-		public void Involve(Vector error, Vector result)
+		public void InvolveAdd(Vector error, Vector result)
 		{
 			var inputSize = Size;
 			var inputCells = cells;

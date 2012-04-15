@@ -45,9 +45,15 @@ namespace Nanon.NeuralNetworks
 			// f'(o) * (o - t)
 			//error.Mul(deriv, error);
 			
+			// cancel backprop if isnt neccessary
+			if (error.EuclideanNorm < 0.1d)
+				Console.WriteLine("Ignore {0}", counter++);
+			
 			layers.Backprop(input, error);
 		}
-
+		
+		public static int counter = 0;
+		
 		public void Correct (double coeff)
 		{
 			layers.Correct(coeff);

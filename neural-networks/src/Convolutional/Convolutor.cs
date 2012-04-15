@@ -13,7 +13,8 @@ namespace Nanon.NeuralNetworks.Layer.Convolutional
 		protected T gradients;
 
 		protected T predError;
-		
+		protected double inputFactor = 1.0d;
+			
 		internal Convolutor(IActivator activatorA) : 
 			base(activatorA)
 		{
@@ -43,13 +44,13 @@ namespace Nanon.NeuralNetworks.Layer.Convolutional
 
 		public override void Gradient (T inputs, T outputError)
 		{
-			inputs.Involve(outputError, gradients);
+			inputs.InvolveAdd(outputError, gradients);
 			biasGradient += outputError.Sum;
 		}
 
 		public override void Correct(double coeff)
 		{
-			gradients.Mul(coeff, gradients);
+			gradients.Mul(coeff * inputFactor, gradients);
 			weights.Sub(gradients, weights);
 			gradients.SetToZero();
 			
@@ -74,6 +75,8 @@ namespace Nanon.NeuralNetworks.Layer.Convolutional
 			
 			signals = new Matrix(outputWidth, outputHeight);
 			outputs = new Matrix(outputWidth, outputHeight);
+			
+			inputFactor = 1 / ((double)outputWidth * (double)outputHeight);
 		}
 	}
 }

@@ -306,7 +306,7 @@ namespace Nanon.Math.Linear
 			}
 		}
 		
-		public void Convolve(Matrix kernel, Matrix res)
+		unsafe public void Convolve(Matrix kernel, Matrix res)
 		{
 			Func<int, bool> even = x => (x & 1) == 0;
 			
@@ -335,13 +335,17 @@ namespace Nanon.Math.Linear
 				{
 					var acc = 0.0d;
 				
-			    	for (var j = 0; j < kernelHeight; ++j)
+					var inputOffset  = col + row * inputWidth;
+					var kernelOffset = 0;
+			    	
+					for (var j = 0; j < kernelHeight; ++j)
 					{
-						var inputOffset  = col + (row + j) * inputWidth;
-						var kernelOffset = j * kernelWidth; 
-					                
-			     		for (var i = 0; i < kernelWidth; ++i)
+						for (var i = 0; i < kernelWidth; ++i)
 							acc += inputCells[inputOffset + i] * kernelCells[kernelOffset + i];
+					                
+					                
+					    inputOffset += inputWidth;
+						kernelOffset += kernelWidth;
 					}
 							
 				    var resIndex = col + row * outputWidth;
@@ -349,12 +353,39 @@ namespace Nanon.Math.Linear
 				}
 		}
 		
-		public void Deconvolve(Matrix kernel, Matrix res)
+		unsafe public void Deconvolve(Matrix kernel, Matrix res)
 		{
-			//for 
+			res.SetToZero();
+			
+			var inputWidth   = width;
+			var inputHeight  = height;
+			
+			var outputWidth  = res.width;
+			var outputHeight = res.height;
+			
+			var kernelWidth  = kernel.width;
+			var kernelHeight = kernel.height;
+			
+			for (var row = 0; row < inputHeight; ++row)
+			    for (var col = 0; col < inputWidth; ++col)
+				{
+					var inputOffset = col + row * inputWidth;
+					var inputVal = cells[inputOffset];
+					
+					for (var j = 0; j < kernelHeight; ++j)
+					{
+						var resOffset = col + (j + row) * outputWidth;
+						
+						for (var i = 0; i < kernelWidth; ++i)
+							res.Cells[i + resOffset] += inputVal;
+					}
+				}
+			
+			var ksum = kernel.Sum;
+			res.Mul(ksum, res);
 		}
 
-		public void Involve(Matrix err, Matrix kernel)
+		unsafe public void InvolveAdd(Matrix err, Matrix kernel)
 		{
 			var inputWidth   = width;
 			var inputHeight  = height;
@@ -369,14 +400,18 @@ namespace Nanon.Math.Linear
 			for (var row = 0; row <= inputHeight - kernelHeight; ++row)
 			    for (var col = 0; col <= inputWidth - kernelWidth; ++col)
 				{
-			    	for (var j = 0; j < kernelHeight; ++j)
+			    	var errorIndex   = col + row  * err.width; 
+					var errorVal     = errCells[errorIndex];
+					var inputOffset  = col + row * inputWidth;
+					var kernelOffset = 0;
+				
+					for (var j = 0; j < kernelHeight; ++j)
 					{
-						var inputOffset  = col + (j + row) * inputWidth;
-						var errorIndex   = col + row  * err.width; 
-					    var kernelOffset = j * kernelWidth;
-					
-			     		for (var i = 0; i < kernelWidth; ++i)
-							kernelCells[kernelOffset + i] += inputCells[inputOffset + i] * errCells[errorIndex];
+						for (var i = 0; i < kernelWidth; ++i)
+							kernelCells[kernelOffset + i] += inputCells[inputOffset + i] * errorVal;
+						
+						kernelOffset += kernelWidth;
+						inputOffset  += inputWidth;
 					}
 				}
 		}
