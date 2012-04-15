@@ -55,21 +55,46 @@ namespace Nanon.NeuralNetworks
 			for (var i = 0; i < count; ++i)
 				b[i] = new MatrixSubsampler(24, 24, 12, 12, new Tanh());
 			
-			var c = new ISingleLayer<Matrix, Matrix>[count];
+			var splitter    = new Splitter<Matrix, Matrix>(a);
+			var merger      = new MatrixMerger<Matrix>(b);
+			
+			var classif  = new FullyConnectedLayer(144 * count, 10, new Tanh());
+			
+			var comp = CompositeLayer<Vector, Vector[], Vector>.Compose(splitter, 
+			                                                            merger,
+			                                                            classif);
+			
+			return new NeuralNetwork<Matrix>(comp);
+		}
+		
+		public static NeuralNetwork<Matrix> Create1(IDataSet<Matrix, Vector> dataSet)
+		{
+			var count  = 5;
+			var branchCount = 3;
+			
+			var a = new ISingleLayer<Matrix, Matrix>[count];
 			for (var i = 0; i < count; ++i)
-				c[i] = new MatrixConvolutor(12, 12, 8, 8, new Tanh());
+				a[i] = new MatrixConvolutor(28, 28, 24, 24, new Tanh());
 			
-			var d = new ISingleLayer<Matrix, Matrix>[count];
+			var b = new ISingleLayer<Matrix, Matrix>[count];
 			for (var i = 0; i < count; ++i)
-				d[i] = new MatrixSubsampler(8, 8, 4, 4, new Tanh());
+				b[i] = new MatrixSubsampler(24, 24, 12, 12, new Tanh());
+			
+			var c = new ISingleLayer<Matrix, Matrix>[branchCount];
+			for (var i = 0; i < branchCount; ++i)
+				c[i] = new MatrixConvolutor(12, 12, 4, 4, new Tanh());
+			
+			var d = new ISingleLayer<Matrix, Matrix>[count * branchCount];
+			for (var i = 0; i < count * branchCount; ++i)
+				d[i] = new MatrixSubsampler(4, 4, 2, 2, new Tanh());
 			
 			
-			var splitter = new Splitter<Matrix, Matrix>(a);
+			var splitter    = new Splitter<Matrix, Matrix>(a);
 			var applicator1 = new Applicator<Matrix, Matrix>(b);
-			var applicator2 = new Applicator<Matrix, Matrix>(c);
-			var merger   = new MatrixMerger<Matrix>(d);
+			var applicator2 = new Combiner<Matrix, Matrix>(c, count);
+			var merger      = new MatrixMerger<Matrix>(d);
 			
-			var classif  = new FullyConnectedLayer(16 * count, 10, new Tanh());
+			var classif  = new FullyConnectedLayer(4 * branchCount * count, 10, new Tanh());
 			
 			var comp = CompositeLayer<Vector, Vector[], Vector>.Compose(splitter, 
 			                                                            applicator1, 

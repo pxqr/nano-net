@@ -47,7 +47,10 @@ namespace Nanon.NeuralNetworks
 			
 			// cancel backprop if isnt neccessary
 			if (error.EuclideanNorm < 0.1d)
-				Console.WriteLine("Ignore {0}", counter++);
+			{
+				++counter;
+				return;
+			}
 			
 			layers.Backprop(input, error);
 		}
