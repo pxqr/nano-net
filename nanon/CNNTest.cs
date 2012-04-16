@@ -26,10 +26,10 @@ namespace Nanon.Test
 		
 		static void LoadDataSet(string trainImagesPath, string trainLabelsPath, string testImagesPath, string testLabelsPath)
 		{
-			trainDataSet = Load(trainImagesPath, trainLabelsPath).Take(2000);
+			trainDataSet = Load(trainImagesPath, trainLabelsPath);
 			GC.Collect();
 			
-			testDataSet  = Load(testImagesPath, testLabelsPath).Take (2000);
+			testDataSet  = Load(testImagesPath, testLabelsPath);
 			GC.Collect();
 			
 			Console.WriteLine("Normalize data");
@@ -78,7 +78,7 @@ namespace Nanon.Test
 			var timer = new Stopwatch();
 			timer.Start();				
 			
-			var optimizer = new GradientDescent<Matrix, Vector>(5, .05, x => 1, 1, 
+			var optimizer = new GradientDescent<Matrix, Vector>(5, .01, x => 1, 1, 
 			    x => { 
 					timer.Stop();		
 					Console.Write("Ignored {0}% of samples ", 100 * NeuralNetwork<Matrix>.counter / (double)trainDataSet.Inputs.Count());

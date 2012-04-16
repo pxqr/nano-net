@@ -79,10 +79,10 @@ namespace Nanon.NeuralNetworks
 			return new NeuralNetwork<Matrix>(comp);
 		}
 		
-		public static NeuralNetwork<Matrix> Create1(IDataSet<Matrix, Vector> dataSet)
+		public static NeuralNetwork<Matrix> CreateConv(IDataSet<Matrix, Vector> dataSet)
 		{
-			var count  = 6;
-			var branchCount = 3;
+			var count  = 8;
+			var branchCount = 1;
 			
 			var a = new ISingleLayer<Matrix, Matrix>[count];
 			for (var i = 0; i < count; ++i)
@@ -94,11 +94,11 @@ namespace Nanon.NeuralNetworks
 			
 			var c = new ISingleLayer<Matrix, Matrix>[branchCount];
 			for (var i = 0; i < branchCount; ++i)
-				c[i] = new MatrixConvolutor(12, 12, 4, 4, new Tanh());
+				c[i] = new MatrixConvolutor(12, 12, 8, 8, new Tanh());
 			
 			var d = new ISingleLayer<Matrix, Matrix>[count * branchCount];
 			for (var i = 0; i < count * branchCount; ++i)
-				d[i] = new MatrixSubsampler(4, 4, 2, 2, new Tanh());
+				d[i] = new MatrixSubsampler(8, 8, 4, 4, new Tanh());
 			
 			
 			var splitter    = new Splitter<Matrix, Matrix>(a);
@@ -106,7 +106,7 @@ namespace Nanon.NeuralNetworks
 			var applicator2 = new Combiner<Matrix, Matrix>(c, count);
 			var merger      = new MatrixMerger<Matrix>(d);
 			
-			var classif  = new FullyConnectedLayer(4 * branchCount * count, 10, new Tanh());
+			var classif  = new FullyConnectedLayer(16 * branchCount * count, 10, new Tanh());
 			
 			var comp = CompositeLayer<Vector, Vector[], Vector>.Compose(splitter, 
 			                                                            applicator1, 
