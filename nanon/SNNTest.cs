@@ -27,9 +27,9 @@ namespace Nanon.Test
 		
 		static DataSet<Vector, Vector> LoadDataSet(string trainImagesPath, string trainLabelsPath, string testImagesPath, string testLabelsPath)
 		{
-			var trainDataSet   = Load(trainImagesPath, trainLabelsPath).Take(1000);
+			var trainDataSet   = Load(trainImagesPath, trainLabelsPath);
 			GC.Collect();
-			testDataSet    = Load (testImagesPath, testLabelsPath).Take(1000);
+			testDataSet    = Load (testImagesPath, testLabelsPath);
 			GC.Collect();
 			
 			Console.WriteLine("Normalize data");

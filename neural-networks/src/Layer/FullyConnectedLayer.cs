@@ -30,7 +30,7 @@ namespace Nanon.NeuralNetworks.Layer
 			outputs = new Vector(outputSize);
 			predError = new Vector(inputSize);
 			
-			inputFactor = 1;//System.Math.Sqrt(inputSize + 1);
+			inputFactor = 1.0d * System.Math.Sqrt(inputSize + 1);
 			gradients = new Matrix(inputSize + 1, outputSize);
 		}		
 		

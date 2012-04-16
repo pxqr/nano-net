@@ -10,10 +10,10 @@ namespace Nanon.NeuralNetworks.Layer.Convolutional
 		protected T downsampled;
 		protected T predError;
 		
-		double weight       = -0.5d;
+		double weight       = Vector.RandomUniform(1, 0.5d)[0];
 		double gradient     = 0.0d;
 		
-		double bias         = 0.15d;
+		double bias         = Vector.RandomUniform(1, 0.15d)[0];
 		double biasGradient = 0.0d;
 		
 		protected double weightFactor = 1.0d;
@@ -63,7 +63,7 @@ namespace Nanon.NeuralNetworks.Layer.Convolutional
 		public override void Gradient (T input, T outputError)
 		{
 			gradient     += (outputError.Unwind * downsampled.Unwind) * weightFactor;
-			biasGradient += (outputError.Sum * biasFactor);
+			biasGradient += (outputError.Sum) * biasFactor;
 		}
 
 		public override void Correct (double coeff)
@@ -92,7 +92,7 @@ namespace Nanon.NeuralNetworks.Layer.Convolutional
 			signals = new Matrix(outputWidth, outputHeight);
 			outputs = new Matrix(outputWidth, outputHeight);
 			
-			biasFactor = 1 / (double)signals.Size;
+			biasFactor = 1.0d / System.Math.Sqrt((double)signals.Size);
 			weightFactor = biasFactor;
 		}
 	}

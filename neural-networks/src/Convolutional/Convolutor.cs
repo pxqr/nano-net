@@ -14,11 +14,12 @@ namespace Nanon.NeuralNetworks.Layer.Convolutional
 
 		protected T predError;
 		protected double inputFactor = 1.0d;
-			
+		protected double errorFactor = 1.0d;
+		
 		internal Convolutor(IActivator activatorA) : 
 			base(activatorA)
 		{
-			bias = 0.1d;
+			bias = Vector.RandomUniform(1, 0.1d)[0];
 			biasGradient = 0.0d;
 		}
 		
@@ -39,13 +40,14 @@ namespace Nanon.NeuralNetworks.Layer.Convolutional
 			
 			error.Deconvolve(weights, predError);
 			predError.Mul(deriv, predError);
+			predError.Mul(errorFactor, predError);
 			return predError;
 		}
 
 		public override void Gradient (T inputs, T outputError)
 		{
 			inputs.InvolveAdd(outputError, gradients);
-			biasGradient += outputError.Sum;
+			biasGradient += outputError.Sum * inputFactor;
 		}
 
 		public override void Correct(double coeff)
@@ -69,14 +71,15 @@ namespace Nanon.NeuralNetworks.Layer.Convolutional
 			var kernelHeight = inputHeight - outputHeight + 1;
 				
 			var eps = SingleLayer<Matrix, Matrix>.OptimalInitEpsilon(inputWidth, inputHeight);
-			weights = Matrix.RandomUnform(kernelWidth, kernelHeight, eps);
+			weights = Matrix.RandomNormal(kernelWidth, kernelHeight, eps);
 			gradients = new Matrix(kernelWidth, kernelHeight);
 			predError = new Matrix(inputWidth, inputHeight);
 			
 			signals = new Matrix(outputWidth, outputHeight);
 			outputs = new Matrix(outputWidth, outputHeight);
 			
-			inputFactor = 1 / System.Math.Sqrt((double)outputWidth * (double)outputHeight);
+			inputFactor = 1.0d / System.Math.Sqrt((double)outputWidth * (double)outputHeight);
+			errorFactor = 1.0d / (kernelWidth * kernelHeight);
 		}
 	}
 }

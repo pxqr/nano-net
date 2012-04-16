@@ -25,11 +25,35 @@ namespace Nanon.Math.Linear
 		
 		public static Matrix RandomUnform(int w, int h, double range)
 		{
-
 			var res  = new Matrix(w, h);
-			var rand = new System.Random(randomSeed++);
+			var rand = new System.Random(randomSeed += (w * h));
 			
-			res.Transform(dummy => 2 * range * rand.NextDouble());
+			res.Transform(dummy => 2 * range * rand.NextDouble() - range);
+			
+			return res;
+		}
+		
+		public static Matrix RandomNormal(int w, int h, double range)
+		{
+			var res  = new Matrix(w, h);
+			var rand = new System.Random(randomSeed += (w * h));
+			
+			var halfWidth  = w / 2;
+			var halfHeight = h / 2;
+			
+			var coeff  = System.Math.Sqrt(2 * System.Math.PI) * range;
+			var coeff2 = - 1 / (2 * range * range);
+			
+			for (var j = 0; j < h; ++j)
+				for (var i = 0; i < w; ++i)
+				{	
+					var deltaX = (i - halfWidth);
+					var deltaY = (j - halfHeight);
+					var deltaX2 = deltaX * deltaX;
+					var deltaY2 = deltaY * deltaY;
+					var val = coeff * System.Math.Exp(coeff2 * deltaX2 * deltaY2);
+					res.cells[i + j * w] = val * (rand.NextDouble() - 0.5d);
+				}
 			
 			return res;
 		}
@@ -353,6 +377,39 @@ namespace Nanon.Math.Linear
 				}
 		}
 		
+		unsafe public void Deconvolve1(Matrix kernel, Matrix res)
+		{
+			res.SetToZero();
+			
+			var inputWidth   = width;
+			var inputHeight  = height;
+			
+			var outputWidth  = res.width;
+			var outputHeight = res.height;
+			
+			var kernelWidth  = kernel.width;
+			var kernelHeight = kernel.height;
+			
+			for (var row = 0; row < inputHeight; ++row)
+			    for (var col = 0; col < inputWidth; ++col)
+				{
+					var inputOffset = col + row * inputWidth;
+					var inputVal = cells[inputOffset];
+					var resOffset = col + row * outputWidth;
+					
+					for (var j = 0; j < kernelHeight; ++j)
+					{
+						for (var i = 0; i < kernelWidth; ++i)
+							res.Cells[i + resOffset] += inputVal;
+						
+						resOffset += outputWidth;
+					}
+				}
+			
+			var ksum = kernel.Sum;
+			res.Mul(ksum, res);
+		}
+		
 		unsafe public void Deconvolve(Matrix kernel, Matrix res)
 		{
 			res.SetToZero();
@@ -371,18 +428,16 @@ namespace Nanon.Math.Linear
 				{
 					var inputOffset = col + row * inputWidth;
 					var inputVal = cells[inputOffset];
+					var resOffset = col + row * outputWidth;
 					
 					for (var j = 0; j < kernelHeight; ++j)
 					{
-						var resOffset = col + (j + row) * outputWidth;
-						
 						for (var i = 0; i < kernelWidth; ++i)
-							res.Cells[i + resOffset] += inputVal;
+							res.Cells[i + resOffset] += inputVal * kernel.cells[i + j * kernelWidth];
+						
+						resOffset += outputWidth;
 					}
 				}
-			
-			var ksum = kernel.Sum;
-			res.Mul(ksum, res);
 		}
 
 		unsafe public void InvolveAdd(Matrix err, Matrix kernel)
@@ -441,13 +496,13 @@ namespace Nanon.Math.Linear
 			for (int j = 0; j < height; ++j)
 			{
 				var inputOffset  = j * width;
-				var outputOffset = 2 * j * width;
+				var outputOffset = 2 * j * res.width;
 					
 				for (int i = 0; i < width; ++i)
 				{
 					var val = cells[i + inputOffset];
 					var topOffset     = 2 * i + outputOffset;
-					var bottomOffset  = topOffset + 2 * width;
+					var bottomOffset  = topOffset + res.width;
 					
 					res.cells[topOffset]        = val;
 					res.cells[topOffset + 1]    = val;

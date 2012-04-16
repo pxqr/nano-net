@@ -39,14 +39,14 @@ namespace Nanon.NeuralNetworks
 			output.Sub(trainingOutput, error);
 			
 			// f'(o)
-			//var deriv = output.ZeroCopy();
-			//output.Transform(new Tanh().Derivative, deriv);
+			var deriv = output.ZeroCopy();
+			output.Transform(new Tanh().Derivative, deriv);
 			
 			// f'(o) * (o - t)
-			//error.Mul(deriv, error);
+			error.Mul(deriv, error);
 			
 			// cancel backprop if isnt neccessary
-			if (error.EuclideanNorm < 0.1d)
+			if (error.EuclideanNorm < 0.01d)
 			{
 				++counter;
 				return;
