@@ -17,9 +17,6 @@ namespace Nanon.FileFormat
 	    	var size  = header.Size;
 			data = new double[size];
 			
-			//for (var i = 0; i < size; ++i)
-			//	data[i] = reader.ReadDouble();
-			
 			var raw = new byte[size * 8];
 			reader.BaseStream.Read(raw, 0, size * 8);
 			Buffer.BlockCopy(raw, 0, data, 0, size*8);

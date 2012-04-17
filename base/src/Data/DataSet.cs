@@ -12,11 +12,7 @@ namespace Nanon.Data
 		OutputT[] outputs;
 		
 		public DataSet(InputT[] inputsA, OutputT[] outputsA)
-		{			
-			if (inputsA.Length != outputsA.Length)
-				throw new ArgumentException("Inputs and outputs " +
-											"arrays should be same length.");
-			
+		{						
 		   	inputs = inputsA;
 			outputs = outputsA;
 		}
@@ -35,6 +31,18 @@ namespace Nanon.Data
 			
 			var newOutputs = new OutputT[count];
 			Array.Copy(outputs, newOutputs, count);
+			
+			return new DataSet<InputT, OutputT>(newInputs, newOutputs);			
+		}
+		
+		public DataSet<InputT, OutputT> Take(int fromI, int toI)
+		{
+			var count = toI - fromI;
+			var newInputs = new InputT[count];
+			Array.Copy(inputs, fromI, newInputs, 0, count);
+			
+			var newOutputs = new OutputT[count];
+			Array.Copy(outputs, fromI, newOutputs, 0, count);
 			
 			return new DataSet<InputT, OutputT>(newInputs, newOutputs);			
 		}

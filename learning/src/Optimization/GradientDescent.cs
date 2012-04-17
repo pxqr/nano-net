@@ -24,22 +24,25 @@ namespace Nanon.Learning.Optimization
 		bool showInfo = true;
 		Action<IHypothesis<InputT, OutputT>> callback;
 	
-		//  learningProgression series should ever divergent!
-		Func<int, double> learningProgression =  Series.HarmonicSeries;
-		
 		public GradientDescent(int iterationCountP, 
 		                       double learningRateP, 
-		                       Func<int, double> learningProgressionA, 
 		                       int initialStepSizeP,
 		                       Action<IHypothesis<InputT, OutputT>> callbackA)
 		{
 			iterationCount  = iterationCountP;
 			learningRate    = learningRateP;
 			initialStepSize = initialStepSizeP;
-			learningProgression = learningProgressionA;
 			callback = callbackA;
 		}
-		
+
+		public double LearningRate {
+			get {
+				return this.learningRate;
+			}
+			set {
+				learningRate = value;
+			}
+		}		
 		public bool ShowInfo 
 		{
 			get
@@ -70,11 +73,11 @@ namespace Nanon.Learning.Optimization
 			}
 		}
 		
-		void DoGradientStep(IHypothesis<InputT, OutputT> hypothesis, IEnumerable<Tuple<InputT, OutputT> > exsamples, double coeff, int stepSize)
+		void DoGradientStep(IHypothesis<InputT, OutputT> hypothesis, IEnumerable<Tuple<InputT, OutputT> > exsamples, int stepSize)
 		{
 			var batchSize = 0;
 			var a = System.Math.Min(stepSize, exsamples.Count());
-			var factor = (coeff / (double)a) * learningRate;
+			var factor = learningRate / (double)a;
 			
 			foreach(var ex in exsamples)
 			{
@@ -101,8 +104,7 @@ namespace Nanon.Learning.Optimization
 			
 			for (var iteration = 1; iteration <= iterationCount; ++iteration)
 			{
-				var coeff =  learningProgression(iteration);
-				DoGradientStep(hypothesis, exsamples, coeff, stepSize);
+				DoGradientStep(hypothesis, exsamples, stepSize);
 				stepSize *= 2;
 				
 				if (showInfo)

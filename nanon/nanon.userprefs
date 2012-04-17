@@ -1,22 +1,22 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="CNNTest.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="NorbTest.cs">
     <Files>
-      <File FileName="../neural-networks/src/Convolutional/Convolutor.cs" Line="80" Column="4" />
-      <File FileName="../neural-networks/src/NetworkBuilder.cs" Line="65" Column="71" />
-      <File FileName="../neural-networks/src/Layer/Composition/Combiner.cs" Line="42" Column="1" />
-      <File FileName="CNNTest.cs" Line="86" Column="38" />
-      <File FileName="../neural-networks/src/NeuralNetwork.cs" Line="52" Column="5" />
+      <File FileName="NorbTest.cs" Line="28" Column="67" />
+      <File FileName="Main.cs" Line="30" Column="74" />
+      <File FileName="../math/src/Linear/Matrix.cs" Line="76" Column="28" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
+          <Node name="Base" expanded="True">
+            <Node name="Data" expanded="True" />
+          </Node>
           <Node name="Learning" expanded="True">
             <Node name="Optimization" expanded="True" />
             <Node name="Tools" expanded="True" />
           </Node>
           <Node name="Math" expanded="True">
-            <Node name="Activator" expanded="True" />
             <Node name="Linear" expanded="True" />
           </Node>
           <Node name="NeuralNetworks" expanded="True">
@@ -27,7 +27,7 @@
             </Node>
           </Node>
           <Node name="Test" expanded="True">
-            <Node name="CNNTest.cs" selected="True" />
+            <Node name="NorbTest.cs" selected="True" />
           </Node>
         </State>
       </Pad>
@@ -39,6 +39,8 @@
           <Value>gradient</Value>
           <Value>modelgrad</Value>
           <Value>biasGradient</Value>
+          <Value>resCells</Value>
+          <Value>acc</Value>
         </State>
       </Pad>
     </Pads>

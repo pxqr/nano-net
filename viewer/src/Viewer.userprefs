@@ -1,0 +1,33 @@
+﻿<Properties>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
+  <MonoDevelop.Ide.Workbench>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State expanded="True" selected="True" />
+      </Pad>
+      <Pad Id="ClassPad">
+        <State expanded="True" selected="True" />
+      </Pad>
+      <Pad Id="MonoDevelop.Debugger.WatchPad">
+        <State>
+          <Value>gradient</Value>
+          <Value>modelgrad</Value>
+          <Value>biasGradient</Value>
+          <Value>resCells</Value>
+          <Value>acc</Value>
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches>
+    <Watch file="../../learning/src/Tools/RegressionTester.cs" line="38" offsetX="500" offsetY="592" expression="prediction" liveUpdate="False" />
+    <Watch file="../../neural-networks/src/Convolutional/VectorConvolutor.cs" line="54" offsetX="388" offsetY="848" expression="weights" liveUpdate="False" />
+    <Watch file="../../neural-networks/src/Layer/FullyConnectedLayer.cs" line="96" offsetX="564" offsetY="1392" expression="outputError" liveUpdate="False" />
+    <Watch file="../../math/src/Linear/Matrix.cs" line="369" offsetX="828" offsetY="5872" expression="lhs.cells[0]" liveUpdate="False" />
+    <Watch file="../../math/src/Linear/Vector.cs" line="455" offsetX="516" offsetY="6992" expression="error.cells[0]" liveUpdate="False" />
+    <Watch file="../../neural-networks/src/Convolutional/Subsampler.cs" line="56" offsetX="420" offsetY="880" expression="errors" liveUpdate="False" />
+  </MonoDevelop.Ide.DebuggingService.PinnedWatches>
+</Properties>

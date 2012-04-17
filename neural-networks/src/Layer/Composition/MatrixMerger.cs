@@ -9,7 +9,9 @@ namespace Nanon.NeuralNetworks.Layer.Composition
 		ISingleLayer<InputT, Matrix>[] layers;
 		
 		int size;       // layer count
-		int outputSize; // size of output of each layer
+		int outputSize;
+		int outputWidth; // size of output of each layer
+		int outputHeight;
 		
 		Vector outputs;
 		Vector signals;
@@ -24,6 +26,8 @@ namespace Nanon.NeuralNetworks.Layer.Composition
 			
 			layers = parLayers;
 			outputSize = parLayers[0].Output.ToVector.Size;
+			outputWidth = parLayers[0].Output.Width;
+			outputHeight = parLayers[0].Output.Height;
 			
 			predErrors = new InputT[size];
 			
@@ -53,7 +57,7 @@ namespace Nanon.NeuralNetworks.Layer.Composition
 			{
 				var iFrom = i * outputSize;
 				var iTo   = iFrom + outputSize;
-				var unwindedError = new Matrix(outputSize, 1, error.Cut(iFrom, iTo).Cells);
+				var unwindedError = new Matrix(outputWidth, outputHeight, error.Cut(iFrom, iTo).Cells);
 				
 				predErrors[i] = layers[i].PropagateBackward(input[i], unwindedError);
 			}
@@ -67,7 +71,7 @@ namespace Nanon.NeuralNetworks.Layer.Composition
 				// cut 
 				var iFrom = i * outputSize;
 				var iTo   = iFrom + outputSize;
-				var unwindedError = new Matrix(outputSize, 1, outputError.Cut(iFrom, iTo).Cells);
+				var unwindedError = new Matrix(outputWidth, outputHeight, outputError.Cut(iFrom, iTo).Cells);
 
 				layers[i].Gradient(input[i], unwindedError);
 			}

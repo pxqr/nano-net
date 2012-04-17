@@ -71,7 +71,7 @@ namespace Nanon.Test
 							);
 			
 			var cost = Double.PositiveInfinity;
-			var optimizer = new GradientDescent<Vector, Vector>(5, 0.02, x => 1, 2, 
+			var optimizer = new GradientDescent<Vector, Vector>(5, 0.02, 2, 
 			    x => { 
 					Console.Write("trainSet: ");
 					cost = Test(x, dataSet, cost);

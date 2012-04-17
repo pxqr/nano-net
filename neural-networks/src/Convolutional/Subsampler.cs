@@ -92,8 +92,8 @@ namespace Nanon.NeuralNetworks.Layer.Convolutional
 			signals = new Matrix(outputWidth, outputHeight);
 			outputs = new Matrix(outputWidth, outputHeight);
 			
-			biasFactor = 1.0d / System.Math.Sqrt((double)signals.Size);
-			weightFactor = biasFactor;
+			//biasFactor   = 1.0d / System.Math.Sqrt((double)signals.Size);
+			//weightFactor = 1.0d / System.Math.Sqrt((double)signals.Size);
 		}
 	}
 }

@@ -21,15 +21,18 @@ namespace Nanon.Test
 {
 	class MainClass
 	{
-		static string trainImagesPath = "/home/redner/projects/nanon/data/train-images.data"; 
-		static string trainLabelsPath = "/home/redner/projects/nanon/data/train-labels.data"; 	
-		static string testImagesPath  = "/home/redner/projects/nanon/data/test-images.data"; 
-		static string testLabelsPath  = "/home/redner/projects/nanon/data/test-labels.data"; 
+		static string trainImagesPath = "/home/redner/projects/nanon/data/mnist/converted/train-images.data"; 
+		static string trainLabelsPath = "/home/redner/projects/nanon/data/mnist/converted/train-labels.data"; 	
+		static string testImagesPath  = "/home/redner/projects/nanon/data/mnist/converted/test-images.data"; 
+		static string testLabelsPath  = "/home/redner/projects/nanon/data/mnist/converted/test-labels.data"; 
+		
+		static string norbTrainImagesPath = "/home/redner/projects/nanon/data/snorb/trunk/train-trunk-10000.data"; 
+		static string norbTrainLabelsPath = "/home/redner/projects/nanon/data/snorb/trunk/train-labels.data"; 	
 	
 		public static int Main(string[] args)
 		{
 			CNNTest.Test(trainImagesPath, trainLabelsPath, testImagesPath, testLabelsPath);
-
+			//NorbTest.Test(norbTrainImagesPath, norbTrainLabelsPath);
 			return 0;
 		}
 	}

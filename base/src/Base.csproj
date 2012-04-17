@@ -42,6 +42,7 @@
     <Compile Include="Data\DataSet.cs" />
     <Compile Include="Data\IDataSet.cs" />
     <Compile Include="Model\ClassifierWrapper.cs" />
+    <Compile Include="Data\ByteDataSet.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

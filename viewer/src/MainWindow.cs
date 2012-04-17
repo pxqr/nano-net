@@ -37,6 +37,7 @@ public partial class MainWindow: Gtk.Window
 		  path = paths[0];
 		else return;
 	
+		matrices = null;
 		matrices = Matrix.FromFile(path);
 		SetupSpinButton();
 		DrawMatrix(CurrentMatrix);	

@@ -57,6 +57,32 @@ namespace Nanon.NeuralNetworks.Layer.Composition
 			return new CompositeLayer<A, B, F>(fst, tail);
 		}
 		
+		public static ICompositeLayer<A, G> Compose<A, B, C, D, E, F, G>(ISingleLayer<A, B> fst, 
+		                                                           ISingleLayer<B, C> snd, 
+		                                                           ISingleLayer<C, D> trd,
+		                                                           ISingleLayer<D, E> fth,
+		                                                           ISingleLayer<E, F> ffh,
+		                                                           ISingleLayer<F, G> sth)
+			where G : IMatrix<G>
+		{
+			var tail = Compose<B, C, D, E, F, G>(snd, trd, fth, ffh, sth);
+			return new CompositeLayer<A, B, G>(fst, tail);
+		}
+		
+		public static ICompositeLayer<A, H> Compose<A, B, C, D, E, F, G, H>(
+																   ISingleLayer<A, B> fst, 
+		                                                           ISingleLayer<B, C> snd, 
+		                                                           ISingleLayer<C, D> trd,
+		                                                           ISingleLayer<D, E> fth,
+		                                                           ISingleLayer<E, F> ffh,
+		                                                           ISingleLayer<F, G> sth,
+																   ISingleLayer<G, H> svth)
+			where H : IMatrix<H>
+		{
+			var tail = Compose<B, C, D, E, F, G, H>(snd, trd, fth, ffh, sth, svth);
+			return new CompositeLayer<A, B, H>(fst, tail);
+		}
+		
 		#region ICompositeLayer[InputT,OutputT] implementation
 		
 		public OutputT FeedForward(InputT input)

@@ -78,8 +78,8 @@ namespace Nanon.NeuralNetworks.Layer.Convolutional
 			signals = new Matrix(outputWidth, outputHeight);
 			outputs = new Matrix(outputWidth, outputHeight);
 			
-			inputFactor = 1.0d / System.Math.Sqrt((double)outputWidth * (double)outputHeight);
-			errorFactor = 1.0d / (kernelWidth * kernelHeight);
+			//inputFactor = 1.0d / System.Math.Sqrt((double)outputWidth * (double)outputHeight);
+			//errorFactor = 1.0d / (kernelWidth * kernelHeight);
 		}
 	}
 }

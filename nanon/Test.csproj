@@ -41,6 +41,7 @@
     <Compile Include="CNNTest.cs" />
     <Compile Include="SNNTest.cs" />
     <Compile Include="MatrixTest.cs" />
+    <Compile Include="NorbTest.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
