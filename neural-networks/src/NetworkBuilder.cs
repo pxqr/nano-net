@@ -105,6 +105,32 @@ namespace Nanon.NeuralNetworks
 			return new NeuralNetwork<Matrix>(comp);
 		}
 		
+		public static NeuralNetwork<Matrix> CreateMnist(IDataSet<Matrix, Vector> dataSet)
+		{
+			var count  = 10;
+			
+			var a = new ISingleLayer<Matrix, Matrix>[count];
+			for (var i = 0; i < count; ++i)
+				a[i] = new MatrixConvolutor(28, 28, 24, 24, new Tanh());
+			
+			var b = new ISingleLayer<Matrix, Matrix>[count];
+			for (var i = 0; i < count; ++i)
+				b[i] = new MatrixSubsampler(24, 24, 12, 12, new Tanh());
+			
+			var splitter    = new Splitter<Matrix, Matrix>(a);
+			var merger      = new MatrixMerger<Matrix>(b);
+				
+			var classif  = new FullyConnectedLayer(144 * count, 50, new Tanh());
+			var classif2 = new FullyConnectedLayer(50, 10, new Tanh());
+			
+			var comp = CompositeLayer<Vector, Vector[], Vector>.Compose(splitter, 
+			                                                            merger,
+			                                                            classif,
+			                                                            classif2);
+			
+			return new NeuralNetwork<Matrix>(comp);
+		}
+		
 		public static NeuralNetwork<Matrix> CreateConv(IDataSet<Matrix, Vector> dataSet)
 		{
 			var count  = 5;
