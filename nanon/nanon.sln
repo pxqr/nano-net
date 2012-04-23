@@ -17,6 +17,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NeuralNetworks", "..\neural
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Statistics", "..\statistics\src\Statistics.csproj", "{698E7D64-69A3-4EEE-8942-3A933075FBA4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reader", "..\reader\Reader.csproj", "{C183D877-283D-4CD8-AE52-CF69AFC028D3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OCR", "..\ocr\OCR.csproj", "{A8567F00-6A0B-48A8-99C0-6B4F99AF58B0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
@@ -35,6 +39,10 @@ Global
 		{698E7D64-69A3-4EEE-8942-3A933075FBA4}.Debug|x86.Build.0 = Debug|Any CPU
 		{698E7D64-69A3-4EEE-8942-3A933075FBA4}.Release|x86.ActiveCfg = Release|Any CPU
 		{698E7D64-69A3-4EEE-8942-3A933075FBA4}.Release|x86.Build.0 = Release|Any CPU
+		{A8567F00-6A0B-48A8-99C0-6B4F99AF58B0}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{A8567F00-6A0B-48A8-99C0-6B4F99AF58B0}.Debug|x86.Build.0 = Debug|Any CPU
+		{A8567F00-6A0B-48A8-99C0-6B4F99AF58B0}.Release|x86.ActiveCfg = Release|Any CPU
+		{A8567F00-6A0B-48A8-99C0-6B4F99AF58B0}.Release|x86.Build.0 = Release|Any CPU
 		{A9369E7A-5A2A-4DD5-8403-06D3CF54A4A5}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{A9369E7A-5A2A-4DD5-8403-06D3CF54A4A5}.Debug|x86.Build.0 = Debug|Any CPU
 		{A9369E7A-5A2A-4DD5-8403-06D3CF54A4A5}.Release|x86.ActiveCfg = Release|Any CPU
@@ -43,6 +51,10 @@ Global
 		{B83429E8-0109-4C62-BDD7-3CE746B0C20A}.Debug|x86.Build.0 = Debug|Any CPU
 		{B83429E8-0109-4C62-BDD7-3CE746B0C20A}.Release|x86.ActiveCfg = Release|Any CPU
 		{B83429E8-0109-4C62-BDD7-3CE746B0C20A}.Release|x86.Build.0 = Release|Any CPU
+		{C183D877-283D-4CD8-AE52-CF69AFC028D3}.Debug|x86.ActiveCfg = Debug|x86
+		{C183D877-283D-4CD8-AE52-CF69AFC028D3}.Debug|x86.Build.0 = Debug|x86
+		{C183D877-283D-4CD8-AE52-CF69AFC028D3}.Release|x86.ActiveCfg = Release|x86
+		{C183D877-283D-4CD8-AE52-CF69AFC028D3}.Release|x86.Build.0 = Release|x86
 		{C78DCD68-43F0-47E5-ABC7-72B5E74C83AC}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{C78DCD68-43F0-47E5-ABC7-72B5E74C83AC}.Debug|x86.Build.0 = Debug|Any CPU
 		{C78DCD68-43F0-47E5-ABC7-72B5E74C83AC}.Release|x86.ActiveCfg = Release|Any CPU

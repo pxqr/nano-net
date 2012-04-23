@@ -420,6 +420,16 @@ namespace Nanon.Math.Linear
 			}		
 		}
 		
+		public void Downsample(Vector res)
+		{
+			throw new NotImplementedException();
+		}
+		
+		public void Upsample(Vector res)
+		{
+			throw new NotImplementedException();	
+		}
+		
 		public void DownsampleBy2(Vector res)
 		{
 			if (Size != res.Size * 2)
@@ -518,6 +528,34 @@ namespace Nanon.Math.Linear
 		}	
 		
 		#endregion
+		
+		public void SetVal(int fromI, int to, double def)
+		{
+			for (var i = fromI; i < to; ++i)
+				cells[i] = def;
+		}
+		
+		public static void ShiftRight(double[] cells, int fromI, int toI, int offset)
+		{
+			for (var i = toI - 1; i >= offset + fromI; --i)
+				cells[i] = cells[i - offset];
+		}
+		
+		public static void ShiftLeft(double[] cells, int fromI, int toI, int offset)
+		{
+			for (var i = fromI; i < toI - offset; ++i)
+				cells[i] = cells[i + offset];
+		}
+		
+		public static void Shift(double[] cells, int fromI, int toI, int offset)
+		{
+			if (offset > 0)
+				ShiftRight(cells, fromI, toI, offset);
+			else if (offset < 0)
+				ShiftLeft(cells, fromI, toI, -offset);
+						
+			// if zero then do nothing
+		}
 	}
 }
 

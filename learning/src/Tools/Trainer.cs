@@ -6,6 +6,7 @@ using Nanon.Data;
 using Nanon.Model;
 using Nanon.Learning.Optimization;
 using System.Diagnostics;
+using System.Collections.Generic;
 
 namespace Nanon.Learning.Tools
 {
@@ -19,12 +20,12 @@ namespace Nanon.Learning.Tools
 			optimizer = optimizerA;
 		}
 		
-		public void Train(IHypothesis<InputT, OutputT> hypothesis, IDataSet<InputT, OutputT> dataSet)
+		public void Train(IHypothesis<InputT, OutputT> hypothesis, IEnumerable<Tuple<InputT, OutputT>> dataSet)
 		{
 			var timer = new Stopwatch();
 			timer.Start();
 			
-			optimizer.Optimize(hypothesis, dataSet.Set);
+			optimizer.Optimize(hypothesis, dataSet);
 			
 			timer.Stop();
 			if (showInfo)

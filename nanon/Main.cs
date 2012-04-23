@@ -31,6 +31,7 @@ namespace Nanon.Test
 	
 		public static int Main(string[] args)
 		{
+			//MatrixTest.Test();
 			CNNTest.Test(trainImagesPath, trainLabelsPath, testImagesPath, testLabelsPath);
 			//NorbTest.Test(norbTrainImagesPath, norbTrainLabelsPath);
 			return 0;

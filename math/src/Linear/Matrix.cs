@@ -58,6 +58,49 @@ namespace Nanon.Math.Linear
 			return res;
 		}
 		
+		public void MakeGaussian(double std)
+		{
+			var halfWidth  = width / 2;
+			var halfHeight = height / 2;
+			
+			var coeff  =  1.0d / (2 * System.Math.PI * std * std);
+			var coeff2 = -1.0d / (2 * std * std);
+				
+			for (var j = 0; j < height; ++j)
+				for (var i = 0; i < width; ++i)
+				{	
+					var deltaX = (i - halfWidth);
+					var deltaY = (j - halfHeight);
+					var deltaX2 = deltaX * deltaX;
+					var deltaY2 = deltaY * deltaY;
+				
+					cells[i + j * width] = coeff * System.Math.Exp(coeff2 * (deltaX2 + deltaY2));
+				}
+		}
+		
+		// apply displacement map
+		public void Distort(Matrix hDispMap, Matrix vDispMap, Matrix res)
+		{
+			if (vDispMap.width != width || res.height != height)
+				throw new ArgumentException("Size do not match.");
+			
+			if (vDispMap.width != width || res.height != height)
+				throw new ArgumentException("Size do not match.");
+			
+			for (var j = 0; j < height; ++j)
+				for (var i = 0; i < width; ++i)
+				{
+					var x = i + hDispMap.cells[i + j * width];
+					var y = j + vDispMap.cells[i + j * width];
+					
+					// limit coords to prevent out of range
+					double limX = System.Math.Max(0.0d, System.Math.Min(x, (double)(width - 1)));
+					double limY = System.Math.Max(0.0d, System.Math.Min(y, (double)(height - 1)));
+					
+					res.cells[i + j * width] = this[limX, limY];
+				}
+		}
+		
 		public Matrix(int w, int h) {
 			cells  = new double[w * h];
 			width  = w;
@@ -87,6 +130,22 @@ namespace Nanon.Math.Linear
 				a[i] = new Matrix(width, height, table);
 			}				                  
 			return a;
+		}
+		
+		public static void StoreToFile(Matrix[] matrices, string filename)
+		{
+			var matrix = Matrix.Concat(matrices);
+			
+			using (var stream = File.Open(filename, FileMode.Create))
+			{
+				using (var writer = new BinaryWriter(stream))
+				{
+					var header = new Header(matrices.Length, matrices.First().Height, matrices.First().Width);
+					var body   = new Body(matrix.cells);
+					var file   = new DataFile(header, body);
+					file.ToBytes(writer);
+				}
+			}
 		}
 		
 		public static Matrix[] FromFile(string filename) 
@@ -128,8 +187,6 @@ namespace Nanon.Math.Linear
 		   	  return new Vector(cells);	
 			}
 		}
-		
-
 			        
 	    public int Size 
 		{
@@ -162,6 +219,41 @@ namespace Nanon.Math.Linear
 			get
 			{
 				return cells[i];
+			}
+		}
+		
+		public double this[int i, int j]
+		{
+			get
+			{
+				return cells[i + j * width];	
+			}
+		}
+		
+		// by bilinear interpolation
+		public double this[double x, double y]
+		{
+			get
+			{
+				var ileft   = System.Math.Floor(x);
+				var iright  = System.Math.Ceiling(x);
+				var jtop    = System.Math.Floor(y);
+				var jbottom = System.Math.Ceiling(y);
+				
+				var xDist = x - ileft;
+				
+				var topLeftPixel  = cells[(int)ileft  + ((int)jtop) * width];
+				var topRightPixel = cells[(int)iright + ((int)jtop) * width];
+				var ytop = (1.0d - xDist) * topLeftPixel + xDist * topRightPixel;
+				
+				var botLeftPixel  = cells[(int)ileft  + ((int)jbottom) * width];
+				var botRightPixel = cells[(int)iright + ((int)jbottom) * width];
+				var ybot = (1.0d - xDist) * botLeftPixel + xDist * botRightPixel;
+				
+				var yDist = y - jtop;
+				var res = (1.0d - yDist) * ytop + yDist * ybot;
+				
+				return res;
 			}
 		}
 		
@@ -331,12 +423,7 @@ namespace Nanon.Math.Linear
 		}
 		
 		unsafe public void Convolve(Matrix kernel, Matrix res)
-		{
-			Func<int, bool> even = x => (x & 1) == 0;
-			
-			if (even(kernel.width) || even(kernel.height))
-			    throw new ArgumentException("Kernel width and height should be odd!");
-			
+		{			
 			var inputWidth   = width;
 			var inputHeight  = height;
 			
@@ -471,6 +558,23 @@ namespace Nanon.Math.Linear
 				}
 		}
 		
+		public void Downsample(Matrix res)
+		{
+			if ((width % res.width != 0) || (height % res.height != 0))
+				throw new ArgumentException("Integral scale factor do not exist!");
+			
+			var xScale = width  / res.width;
+			var yScale = height / res.height;
+					
+			throw new NotImplementedException();					
+		}
+		
+		public void Upsample(Matrix res)
+		{
+			throw new NotImplementedException();			
+		}
+		
+		
 		public void DownsampleBy2(Matrix res)
 		{
 			for (int j = 0; j < res.height; ++j)
@@ -582,6 +686,41 @@ namespace Nanon.Math.Linear
 			  cells[i] = f(cells[i]);
 		}
 		
+		
+		
 		#endregion
+		
+		void ShiftUp(int offset)
+		{
+			
+		}
+		
+		void ShiftDown(int offset)
+		{
+			
+		}
+		
+		void ShiftHorizontal(int offset)
+		{
+			for (var row = 0; row < height; ++row)
+			{
+				var rowOffset = row * width;
+				Vector.Shift(cells, rowOffset, rowOffset + width, offset);
+			}
+		}
+		
+		void ShiftVertical(int offset)
+		{
+			if (offset > 0)
+				ShiftUp(offset);
+			else if (offset < 0)
+				ShiftDown(offset);
+		}
+		
+		public void Shift(int offsetX, int offsetY)
+		{
+			ShiftHorizontal(offsetX);
+			ShiftVertical(offsetY);
+		}
 	}
 }

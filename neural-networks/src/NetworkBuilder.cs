@@ -79,7 +79,7 @@ namespace Nanon.NeuralNetworks
 			return new NeuralNetwork<Matrix>(comp);
 		}
 		
-		public static NeuralNetwork<Matrix> CreateSemi(IDataSet<Matrix, Vector> dataSet)
+		public static NeuralNetwork<Matrix> CreateMnist(IDataSet<Matrix, Vector> dataSet)
 		{
 			var count  = 10;
 			
@@ -89,7 +89,7 @@ namespace Nanon.NeuralNetworks
 			
 			var b = new ISingleLayer<Matrix, Matrix>[count];
 			for (var i = 0; i < count; ++i)
-				b[i] = new MatrixSubsampler(24, 24, 12, 12, new Tanh());
+				b[i] = new MatrixConvolutor(24, 24, 12, 12, new Tanh());
 			
 			var splitter    = new Splitter<Matrix, Matrix>(a);
 			var merger      = new MatrixMerger<Matrix>(b);
@@ -105,9 +105,9 @@ namespace Nanon.NeuralNetworks
 			return new NeuralNetwork<Matrix>(comp);
 		}
 		
-		public static NeuralNetwork<Matrix> CreateMnist(IDataSet<Matrix, Vector> dataSet)
+		public static NeuralNetwork<Matrix> CreateSemi(IDataSet<Matrix, Vector> dataSet)
 		{
-			var count  = 10;
+			var count  = 5;
 			
 			var a = new ISingleLayer<Matrix, Matrix>[count];
 			for (var i = 0; i < count; ++i)
@@ -121,7 +121,7 @@ namespace Nanon.NeuralNetworks
 			var merger      = new MatrixMerger<Matrix>(b);
 				
 			var classif  = new FullyConnectedLayer(144 * count, 50, new Tanh());
-			var classif2 = new FullyConnectedLayer(50, 10, new Tanh());
+			var classif2 = new FullyConnectedLayer(100, 10, new Tanh());
 			
 			var comp = CompositeLayer<Vector, Vector[], Vector>.Compose(splitter, 
 			                                                            merger,
@@ -170,34 +170,29 @@ namespace Nanon.NeuralNetworks
 		
 		public static NeuralNetwork<Matrix> CreateNorb(IDataSet<Matrix, Vector> dataSet)
 		{
-			var count  = 10;
+			var count  = 12;
+			var branch = 5;
 			
 			var a = new ISingleLayer<Matrix, Matrix>[count];
 			for (var i = 0; i < count; ++i)
-				a[i] = new MatrixConvolutor(96, 96, 80, 80, new Tanh());
+				a[i] = new MatrixConvolutor(96, 96, 92, 92, new Tanh());
 			
 			var b = new ISingleLayer<Matrix, Matrix>[count];
 			for (var i = 0; i < count; ++i)
-				b[i] = new MatrixSubsampler(80, 80, 40, 40, new Tanh());
+				b[i] = new MatrixSubsampler(92, 92, 46, 46, new Tanh());
 			
 			var c = new ISingleLayer<Matrix, Matrix>[count];
 			for (var i = 0; i < count; ++i)
-				c[i] = new MatrixConvolutor(40, 40, 30, 30, new Tanh());
-			
-			var d = new ISingleLayer<Matrix, Matrix>[count];
-			for (var i = 0; i < count; ++i)
-				d[i] = new MatrixSubsampler(30, 30, 15, 15, new Tanh());
+				c[i] = new MatrixSubsampler(46, 46, 23, 23, new Tanh());
 			
 			var splitter    = new Splitter<Matrix, Matrix>(a);
 			var applicator1 = new Applicator<Matrix, Matrix>(b);
-			var applicator2 = new Applicator<Matrix, Matrix>(c);
-			var merger      = new MatrixMerger<Matrix>(d);
+			var merger      = new MatrixMerger<Matrix>(c);
 			
-			var classif  = new FullyConnectedLayer(225 * count, 5, new Tanh());
+			var classif  = new FullyConnectedLayer(23 * 23 * count, 5, new Tanh());
 			
 			var comp = CompositeLayer<Vector, Vector[], Vector>.Compose(splitter, 
 			                                                            applicator1, 
-			                                                            applicator2,
 			                                                            merger,
 			                                                            classif
 			                                                           );

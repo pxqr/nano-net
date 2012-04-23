@@ -19,14 +19,24 @@ namespace Nanon.Test
 		static DataSet<Matrix, Vector> Load(string trainImagesPath, string trainLabelsPath)
 		{
 			Console.WriteLine("Load data from {0} \n{1}", trainImagesPath, trainLabelsPath);
-			return DataSet<Matrix, Matrix>.FromFile(trainImagesPath, trainLabelsPath)
-				   				          .Convert(x => x, 
-				                 				   x => Vector.FromIndex((int)x.Cells[0], 5, -0.8d, 0.8d));
+			var dataSet = DataSet<Matrix, Matrix>.FromFile(trainImagesPath, trainLabelsPath);
+			var inputs = dataSet.Inputs.ToArray();
+			var outputs = dataSet.Outputs;
+			var a = outputs.ToArray();
+			var b = new Vector[2 * a.Length];
+			
+			for (var i = 0; i < a.Length; ++i)
+			{
+				b[2 * i] = Vector.FromIndex((int)a[i].Cells[0], 5, -0.8d, 0.8d);
+				b[2 * i + 1] = b[2 * i];
+			}
+				
+			return new DataSet<Matrix, Vector>(inputs, b);
 		}
 		
 		static void LoadDataSet(string trainImagesPath, string trainLabelsPath)
 		{
-			var dataSet = Load(trainImagesPath, trainLabelsPath).Take(9500);
+			var dataSet = Load(trainImagesPath, trainLabelsPath).Take(2500);
 			GC.Collect();
 			
 			Console.WriteLine("Normalize data");
@@ -36,8 +46,8 @@ namespace Nanon.Test
 			foreach (var input in dataSet.Inputs)
 				inputsNormalizator.Normalize(input.ToVector);
 			
-			trainDataSet = dataSet.Take(0, 8000);
-			testDataSet  = dataSet.Take(8000, 9500);
+			trainDataSet = dataSet.Take(0, 80);
+			testDataSet  = dataSet.Take(80, 100);
 		}
 		
 		static double Test(IHypothesis<Matrix, Vector> network, IDataSet<Matrix, Vector> dataSet, double oldcost = Double.PositiveInfinity)
@@ -95,9 +105,9 @@ namespace Nanon.Test
 			for (var i = 0; i < 5; ++i)
 			{
 				Console.WriteLine("Generation {0}", i);	
-				trainer.Train(network, trainDataSet);
+				trainer.Train(network, trainDataSet.Set);
 				optimizer.IterationCount  += 2;
-				//optimizer.LearningRate    += 0.01;
+				//optimizer.LearningRate    *= 1.02;
 				optimizer.InitialStepSize *= 2;
 			}
 			

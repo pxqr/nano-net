@@ -8,6 +8,7 @@ using Nanon.Learning.Optimization;
 using Nanon.NeuralNetworks;
 using System.Linq;
 using System.Diagnostics;
+using Nanon.Learning.Deformation;
 
 namespace Nanon.Test
 {
@@ -41,6 +42,17 @@ namespace Nanon.Test
 			
 			foreach (var input in testDataSet.Inputs)
 				inputsNormalizator.Normalize(input.ToVector);
+			
+			//Func<Matrix, Matrix> shifter = x => Deformation.Shift(x, 1, 1);
+			//Func<Matrix, Matrix> distorter = x => Deformation.Distortion(x, 19, 19, 2, 5); 
+			
+			//var expandedSet = trainDataSet.Inputs.Select(distorter);
+			//var expandedSet = trainDataSet.Inputs;
+			
+			//trainDataSet = new DataSet<Matrix, Vector>(
+			//	expandedSet.Concat(trainDataSet.Inputs).ToArray(), 
+			//	trainDataSet.Outputs.Concat(trainDataSet.Outputs).ToArray());
+				
 		}
 		
 		static double Test(IHypothesis<Matrix, Vector> network, IDataSet<Matrix, Vector> dataSet, double oldcost = Double.PositiveInfinity)
@@ -67,8 +79,8 @@ namespace Nanon.Test
 		{
 			LoadDataSet(trainImagesPath, trainLabelsPath, testImagesPath, testLabelsPath);
 			GC.Collect();
-				
-			var network   = NetworkBuilder.CreateSemi(trainDataSet);
+
+			var network   = NetworkBuilder.CreateMnist(trainDataSet);
 			
 			Console.WriteLine("Initial");
 			Test(network, testDataSet);
@@ -84,24 +96,23 @@ namespace Nanon.Test
 					Console.Write("Ignored {0}% of samples ", 100 * NeuralNetwork<Matrix>.counter / (double)trainDataSet.Inputs.Count());
 					Console.WriteLine("and gradient descent step time: {0} ms", timer.ElapsedMilliseconds);	
 					NeuralNetwork<Matrix>.counter = 0;
-					//Console.Write("trainSet: ");
-					//cost = Test(x, trainDataSet, cost);
+					Console.Write("trainSet: ");
+					cost = Test(x, trainDataSet, cost);
 					Console.Write(" || ");
 					Console.Write("testSet:  ");
 					Test(x, testDataSet);
 					Console.WriteLine();
 					timer.Reset();
-					timer.Start();				
+					timer.Start();
 				});
 			
+			var trainer = new Trainer<Matrix, Vector>(optimizer);
 			
-			
-			var trainer   = new Trainer<Matrix, Vector>(optimizer);
-			
-			for (var i = 0; i < 5; ++i)
+			for (var i = 0; i < 10; ++i)
 			{
 				Console.WriteLine("Generation {0}", i);	
-				trainer.Train(network, trainDataSet);
+				trainer.Train(network, trainDataSet.Set);
+				
 				optimizer.IterationCount  += 1;
 				optimizer.InitialStepSize *= 2;
 			}

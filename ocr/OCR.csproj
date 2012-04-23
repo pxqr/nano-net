@@ -5,16 +5,16 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.0</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{B83429E8-0109-4C62-BDD7-3CE746B0C20A}</ProjectGuid>
+    <ProjectGuid>{A8567F00-6A0B-48A8-99C0-6B4F99AF58B0}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>Learning</RootNamespace>
-    <AssemblyName>Learning</AssemblyName>
+    <RootNamespace>ocr</RootNamespace>
+    <AssemblyName>ocr</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\..\bin\learning</OutputPath>
+    <OutputPath>..\..\bin\ocr</OutputPath>
     <DefineConstants>DEBUG;</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -23,37 +23,21 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\..\bin\learning</OutputPath>
+    <OutputPath>..\..\bin\ocr</OutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
-    <Compile Include="Optimization\IOptimizer.cs" />
-    <Compile Include="Optimization\GradientDescent.cs" />
-    <Compile Include="Tools\Trainer.cs" />
-    <Compile Include="Tools\ITester.cs" />
-    <Compile Include="Tools\RegressionTester.cs" />
-    <Compile Include="Tools\ClassifierTester.cs" />
-    <Compile Include="Deformation\Deformation.cs" />
+    <Compile Include="Scanner.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
-    <Folder Include="Optimization\" />
-    <Folder Include="Tools\" />
-    <Folder Include="Deformation\" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\base\src\Base.csproj">
-      <Project>{C78DCD68-43F0-47E5-ABC7-72B5E74C83AC}</Project>
-      <Name>Base</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\math\src\Math.csproj">
+    <ProjectReference Include="..\math\src\Math.csproj">
       <Project>{E6361C07-480A-4F85-87CE-89F2ED3B8277}</Project>
       <Name>Math</Name>
     </ProjectReference>

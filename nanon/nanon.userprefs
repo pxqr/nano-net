@@ -1,34 +1,15 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="NorbTest.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="../reader/MainWindow.cs">
     <Files>
-      <File FileName="NorbTest.cs" Line="28" Column="67" />
-      <File FileName="Main.cs" Line="30" Column="74" />
-      <File FileName="../math/src/Linear/Matrix.cs" Line="76" Column="28" />
+      <File FileName="../reader/MainWindow.cs" Line="33" Column="23" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
-          <Node name="Base" expanded="True">
-            <Node name="Data" expanded="True" />
-          </Node>
-          <Node name="Learning" expanded="True">
-            <Node name="Optimization" expanded="True" />
-            <Node name="Tools" expanded="True" />
-          </Node>
-          <Node name="Math" expanded="True">
-            <Node name="Linear" expanded="True" />
-          </Node>
-          <Node name="NeuralNetworks" expanded="True">
-            <Node name="Convolutional" expanded="True" />
-            <Node name="GraphBased" expanded="True" />
-            <Node name="Layer" expanded="True">
-              <Node name="Composition" expanded="True" />
-            </Node>
-          </Node>
-          <Node name="Test" expanded="True">
-            <Node name="NorbTest.cs" selected="True" />
-          </Node>
+          <Node name="ocr" expanded="True" selected="True" />
+          <Node name="Reader" expanded="True" />
+          <Node name="Viewer" expanded="True" />
         </State>
       </Pad>
       <Pad Id="ClassPad">
@@ -48,6 +29,8 @@
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore>
       <Breakpoint file="/home/redner/projects/nanon/src/neural-networks/src/Convolutional/VectorSubsampler.cs" line="62" />
+      <Breakpoint file="/home/redner/projects/nanon/src/nanon/NorbTest.cs" line="34" />
+      <Breakpoint file="/home/redner/projects/nanon/src/reader/MainWindow.cs" line="32" />
     </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches>
@@ -57,23 +40,8 @@
     <Watch file="../math/src/Linear/Matrix.cs" line="369" offsetX="828" offsetY="5872" expression="lhs.cells[0]" liveUpdate="False" />
     <Watch file="../math/src/Linear/Vector.cs" line="455" offsetX="516" offsetY="6992" expression="error.cells[0]" liveUpdate="False" />
     <Watch file="../neural-networks/src/Convolutional/Subsampler.cs" line="56" offsetX="420" offsetY="880" expression="errors" liveUpdate="False" />
+    <Watch file="NorbTest.cs" line="30" offsetX="708" offsetY="464" expression="b" liveUpdate="False" />
   </MonoDevelop.Ide.DebuggingService.PinnedWatches>
-  <MonoDevelop.Ide.ItemProperties.Converter>
-    <MonoDevelop.Ide.CustomExecutionModes>
-      <Data Name="Default (Custom)" Id="92820823-239e-429c-b43c-2ced3ed8ea85" ModeId="Default">
-        <CommandData>
-          <Item Key="MonoDevelop.Ide.Execution.CustomArgsCustomizer">
-            <Value Arguments="data/t10k-images-idx3-ubyte data/test-images.data" WorkingDirectory="~/projects/nanon" ctype="CustomArgsExecutionModeData">
-              <EnvironmentVariables />
-            </Value>
-          </Item>
-          <Item Key="MonoDevelop.Ide.Execution.MonoExecutionCustomizer">
-            <Value ctype="MonoExecutionParameters" />
-          </Item>
-        </CommandData>
-      </Data>
-    </MonoDevelop.Ide.CustomExecutionModes>
-  </MonoDevelop.Ide.ItemProperties.Converter>
   <MonoDevelop.Ide.ItemProperties.Test>
     <MonoDevelop.Ide.CustomExecutionModes>
       <Data Name="Default (Custom)" Id="9ddb8817-9742-471d-9d04-d39f5b12f068" ModeId="Default" PromptForParameters="True">
@@ -90,4 +58,20 @@
       </Data>
     </MonoDevelop.Ide.CustomExecutionModes>
   </MonoDevelop.Ide.ItemProperties.Test>
+  <MonoDevelop.Ide.ItemProperties.Converter>
+    <MonoDevelop.Ide.CustomExecutionModes>
+      <Data Name="Default (Custom)" Id="92820823-239e-429c-b43c-2ced3ed8ea85" ModeId="Default">
+        <CommandData>
+          <Item Key="MonoDevelop.Ide.Execution.CustomArgsCustomizer">
+            <Value Arguments="data/t10k-images-idx3-ubyte data/test-images.data" WorkingDirectory="~/projects/nanon" ctype="CustomArgsExecutionModeData">
+              <EnvironmentVariables />
+            </Value>
+          </Item>
+          <Item Key="MonoDevelop.Ide.Execution.MonoExecutionCustomizer">
+            <Value ctype="MonoExecutionParameters" />
+          </Item>
+        </CommandData>
+      </Data>
+    </MonoDevelop.Ide.CustomExecutionModes>
+  </MonoDevelop.Ide.ItemProperties.Converter>
 </Properties>

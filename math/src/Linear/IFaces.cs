@@ -17,6 +17,10 @@ namespace Nanon.Math.Linear
 		void DownsampleBy2(T res);
 		void UpsampleBy2(T res);
 		
+		void Downsample(T res);
+		void Upsample(T res);
+		
+		
 		void Add(double val, T res);
 		void Sub(double val, T res);
 		void Add(T lhs, T res);

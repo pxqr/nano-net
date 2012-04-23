@@ -91,7 +91,7 @@ namespace Nanon.Test
 			for (var i = 0; i < 3; ++i)
 			{
 				Console.WriteLine("next generation");	
-				trainer.Train(network, dataSet);
+				trainer.Train(network, dataSet.Set);
 				optimizer.IterationCount += 1;
 				optimizer.InitialStepSize *= 2;
 			}
